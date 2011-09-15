@@ -1,0 +1,1 @@
+A sample blogging application. Hopefully good enough that I can end up using it.

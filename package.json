@@ -1,0 +1,26 @@
+{
+    "name" : "LameBlog",
+    "description" : "Sample Blog Application",
+    "version" : "1.0.0",
+    "main" : "app.js",
+    "author" : {
+        "name" : "Mike Yoon",
+        "email" : "mike@yaki.org"
+    },
+    "keywords" : 
+        [
+            ""
+        ],
+    "licenses" : {
+        "type" : "none"
+    },
+    "bugs" : {
+        "web" : "null"
+    },
+    "dependencies" : {
+        "express" : "2.4.4",
+        "jade" : "0.14.0",
+        "connect" : "1.6.1",
+        "mongoose" : "2.0.2"
+    }
+}
