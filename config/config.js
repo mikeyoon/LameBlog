@@ -8,7 +8,8 @@
 
     const express = require('express')
     , mongoose = require('mongoose')
-    , storage = require('../lib/storage')(process.env.STORAGE_PLATFORM || 'localfilestorage');
+    , storage = require('../lib/storage')(process.env.STORAGE_PLATFORM || 'localfilestorage')
+    , form = require('connect-form');
 //, nib       = require('nib');
 
 /**
@@ -28,6 +29,7 @@ module.exports = function(app) {
     app.configure(function () {
         this
             .use(express.cookieParser())
+            .use(form({ keepExtensions: true}))
             .use(express.bodyParser())
             .use(express.errorHandler({dumpException: true, showStack: true}))
             .use(express.session({ secret: 'secret key'}))
@@ -39,7 +41,7 @@ module.exports = function(app) {
         this
             .set('views', __dirname + '/../app/views')
             .set('view engine', 'jade')
-            .use(express.static(__dirname + '/../public'))
+            .use('/public', express.static(__dirname + '/../public'));
     });
 
     //  Save reference to database connection
@@ -49,6 +51,7 @@ module.exports = function(app) {
             'main': db
             , 'users': db.model('User')
             , 'posts': db.model('BlogPost')
+            , 'media': db.model('MediaItem')
         })
         app.set('version', '1.0.0');
     });

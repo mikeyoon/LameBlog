@@ -10,12 +10,12 @@
  * Load dependencies
  */
 
-const express       = require('express')
-    , models        = require('./models')
-    , config        = require('./config')
-    , routes        = require('./routes')
-    , environments  = require('./environments');
-    //, errors        = require('./errors');
+    const express = require('express')
+    , models = require('./models')
+    , config = require('./config')
+    , routes = require('./routes')
+    , environments = require('./environments');
+//, errors        = require('./errors');
 
 /**
  * Exports
@@ -23,30 +23,30 @@ const express       = require('express')
 
 module.exports = function () {
 
-  //  Create Server
+    //  Create Server
 
-  const app = express.createServer()
+    const app = express.createServer()
 
-  //  Load Mongoose Models
+    //  Load Mongoose Models
 
-  models(app)
+    models(app)
 
-  //  Load Expressjs config
+    //  Load Expressjs config
 
-  config(app);
+    config(app);
 
-  //  Load Environmental Settings
+    //  Load Environmental Settings
 
-  environments(app);
+    environments(app);
 
-  //  Load routes config
+    //  Load routes config
 
-  routes(app);
+    routes(app);
 
-  //  Load error routes + pages
+    //  Load error routes + pages
 
-  //errors(app);
+    //errors(app);
 
-  return app;
+    return app;
 
 };
