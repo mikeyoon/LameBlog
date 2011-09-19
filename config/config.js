@@ -10,7 +10,6 @@
     , mongoose = require('mongoose')
     , storage = require('../lib/storage')(process.env.STORAGE_PLATFORM || 'localfilestorage')
     , form = require('connect-form');
-//, nib       = require('nib');
 
 /**
  *  Exports

@@ -13,6 +13,8 @@ var MediaItem = module.exports = new Schema({
     filename: String
     , filetype: String
     , url: String
+    , thumburl: String
+    , thumbname: String
     , size: Number
     , createDate: { type: Date, default: Date.now }
 });

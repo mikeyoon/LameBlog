@@ -1,0 +1,13 @@
+script(type="text/javascript", src="/public/markitup/jquery.markitup.js")
+script(type="text/javascript", src="/public/markitup/sets/markdown/set.js")
+
+script(type="text/javascript")
+    $(document).ready(function() {
+        $('#postbody').markItUp(mySettings);
+    });
+
+form(method="POST", action="add")
+    p add post
+        textarea#postbody(name="post[body]")
+
+    input(type="submit", value="Create")

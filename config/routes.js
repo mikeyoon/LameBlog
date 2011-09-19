@@ -21,16 +21,23 @@ module.exports = function(app) {
 
     app.post('/comment/:postId', requiresAuthorization, function(req, res, next) { posts.addComment(req, res, next) });
 
+    app.get('/posts/:id', function(req, res, next) { posts.view(req, res, next) });
+
     app.get('/admin', requiresAdmin, function(req, res, next) { accounts.index(req, res, next) });
 
-    app.get('/admin/posts/add', requiresAdmin, function(req, res, next) { home.index(req, res, next) });
+    app.post('/admin/posts/add', function(req, res, next) { posts.add(req, res, next) });
 
-    app.get('/admin/posts/edit', requiresAdmin, function(req, res, next) { home.index(req, res, next) });
+    app.get('/admin/posts', function(req, res, next) { posts.index(req, res, next) });
 
-    app.post('/admin/posts/edit', requiresAdmin, function(req, res, next) { home.index(req, res, next) });
+    app.post('/admin/posts/:id', function(req, res, next) { posts.edit(req, res, next) });
+
+    app.delete('/admin/posts/:id', function(req, res, next) { posts.delete(req, res, next) });
 
     app.post('/admin/media/add', function(req, res, next) { media.add(req, res, next) });
 
+    app.get('/admin/media/index', function(req, res, next) { media.index(req, res, next) });
+
+    app.delete('/admin/media/:id', function(req, res, next) { media.delete(req, res, next) });
 };
 
 function requiresAuthorization(req, res, next) {
