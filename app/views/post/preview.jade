@@ -1,0 +1,19 @@
+!!! 5
+html
+    head
+
+    link(rel="stylesheet", type="text/css", href="/public/syntaxhighlighter/styles/shCore.css")
+    link(rel="stylesheet", type="text/css", href="/public/syntaxhighlighter/styles/shThemeDefault.css")
+
+    script(type="text/javascript", src="/public/syntaxhighlighter/shCore.js")
+    script(type="text/javascript", src="/public/syntaxhighlighter/shBrushCSharp.js")
+    script(type="text/javascript", src="/public/syntaxhighlighter/shBrushJScript.js")
+    script(type="text/javascript", src="/public/syntaxhighlighter/shBrushSql.js")
+    script(type="text/javascript", src="/public/syntaxhighlighter/shBrushXml.js")
+
+    script(type="text/javascript")
+        SyntaxHighlighter.config.tagName = "code";
+        SyntaxHighlighter.all();
+
+    body
+        div!=body

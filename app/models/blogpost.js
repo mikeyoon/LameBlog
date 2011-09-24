@@ -18,6 +18,7 @@ var BlogPost = module.exports = new Schema({
     , body: { type: String, index: true }
     , path: { type: String, index: true }
     , comments: [Comment]
+    , tags: Array
     , createDate: { type: Date, default: Date.now }
 });
 

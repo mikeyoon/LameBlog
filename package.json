@@ -21,6 +21,10 @@
         "express" : "2.4.4",
         "jade" : "0.14.0",
         "connect" : "1.6.1",
-        "mongoose" : "2.0.2"
+        "mongoose" : "2.0.2",
+        "knox" : "0.0.9",
+        "node-markdown" : "0.1.0",
+        "imagemagick" : "0.1.2",
+        "connect-form" : "0.2.1"
     }
 }

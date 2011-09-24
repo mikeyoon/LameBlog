@@ -17,9 +17,11 @@ module.exports = function(app) {
 
     app.get('/', function(req, res, next) { home.index(req, res, next) });
 
-    app.get('/posts', function(req, res, next) { posts.index(req, res, db, next) });
+    app.get('/posts', function(req, res, next) { posts.index(req, res, next) });
 
     app.post('/comment/:postId', requiresAuthorization, function(req, res, next) { posts.addComment(req, res, next) });
+
+    app.post('/posts/markdown', function(req, res, next) { posts.renderMarkdown(req, res, next)});
 
     app.get('/posts/:id', function(req, res, next) { posts.view(req, res, next) });
 
