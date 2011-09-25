@@ -15,15 +15,22 @@ var User = module.exports = new Schema({
     , email: { type: String, index: true }
     , firstName: String
     , lastName: String
-    , userType: Number
+    , userType: String
+    , facebookToken: String
 });
 
-User.statics.findByEmailAndHash = function(email, hash, callback) {
-    this.findOne({ email: email, password: hash}, callback);
+User.statics.getHash = function(password) {
+    var sha1 = crypto.createHash('sha1');
+    sha1.update(password);
+    return sha1.digest('base64');
 };
 
 User.statics.setPassword = function(password) {
-    var sha1 = crypto.createHash('sha1');
-    sha1.update(password);
-    this.password = sha1.digest('base64');
+    this.password = this.getHash(password);
+};
+
+User.statics.findByEmailAndPassword = function(email, password, callback) {
+    var hash = this.getHash(password);
+
+    this.findOne({ email: email, password: hash}, callback);
 };

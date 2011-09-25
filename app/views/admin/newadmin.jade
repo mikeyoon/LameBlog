@@ -1,0 +1,13 @@
+form(method="POST", action="/admin/setup")
+    p First time admin, create your admin account
+    p Username:
+        input(name="user[username]", type="text")
+    p First Name:
+        input(name="user[firstName]", type="text")
+    p Last Name:
+        input(name="user[lastName]", type="text")
+    p Email:
+        input(name="user[email]", type="text")
+    p Password:
+        input(name="user[password]", type="password")
+    input(type="submit", value="Create Admin")

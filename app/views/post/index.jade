@@ -1,5 +1,6 @@
 - each post in posts
     div
         h3!=post.title
-        !=post.htmlbody
-    
+        div!=post.htmlbody
+        div
+            a(href="javascript: //comment") comment

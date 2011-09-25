@@ -15,7 +15,7 @@ module.exports = function(app) {
 
     var db = app.set('db');
 
-    app.get('/', function(req, res, next) { home.index(req, res, next) });
+    app.get('/', function(req, res, next) { posts.index(req, res, next) });
 
     app.get('/posts', function(req, res, next) { posts.index(req, res, next) });
 
@@ -24,6 +24,12 @@ module.exports = function(app) {
     app.post('/posts/markdown', function(req, res, next) { posts.renderMarkdown(req, res, next)});
 
     app.get('/posts/:id', function(req, res, next) { posts.view(req, res, next) });
+
+    app.get('/admin/login', function(req, res, next) { accounts.loginForm(req, res, next) });
+
+    app.post('/admin/login', function(req, res, next) { accounts.login(req, res, next) });
+
+    app.post('/admin/setup', function(req, res, next) { accounts.setup(req, res, next) });
 
     app.get('/admin', requiresAdmin, function(req, res, next) { accounts.index(req, res, next) });
 
@@ -54,12 +60,12 @@ function requiresAuthorization(req, res, next) {
 }
 
 function requiresAdmin(req, res, next) {
-    if (req.session.user != null && req.session.user.userType == 10)
+    if (req.session.user != null && req.session.user.userType == 'admin')
     {
         next();
         return;
     }
     else {
-        next(new Error('Admin rights required'));
+        res.redirect('admin/login');
     }
 }
