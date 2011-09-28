@@ -18,7 +18,7 @@ module.exports.index = function(req, res, next) {
     var query = req.query.search;
 
     Post.find({ tags: tags }, function(err, data) {
-        res.render('post/index', { posts: data });
+        res.render('post/index', { posts: data, fbAppId: req.app.set('fbAppId') });
     }).limit(limit).skip(skip);
 };
 
@@ -59,11 +59,45 @@ module.exports.view = function(req, res, next) {
 
     Post.findByPath(req.params.id, function(err, data) {
         res.render('post/view', {
-            post: data
+            post: data,
+            fbData: {
+                fbAppId: req.app.set('fbAppId'),
+                ogTitle: data.title,
+                ogUrl: 'http://' + req.app.set('host') + ':' + req.app.set('port') + '/posts' + data.path,
+                ogSiteName: req.app.set('sitename'),
+                ogImageUrl: '',
+                ogDescription: ''
+            }
         });
     });
 };
 
 module.exports.renderMarkdown = function(req, res, next) {
     res.render('post/preview', { layout: false, body: md(decodeURIComponent(req.body.data)).replace("<code>", '<code class="brush: js">') });
+};
+
+module.exports.addComment = function(req, res, next) {
+    var Post = req.app.set('db').posts;
+    var Comment = req.app.set('db').comments;
+
+    Post.findById(req.params.id, function(err, data) {
+        var comment = new Comment({
+            name: req.body.comment.name,
+            email: req.body.comment.email,
+            message: req.body.comment.message
+        });
+
+        data.comments.push(comment);
+        data.save(function(err) {
+            res.send(comment);
+        });
+    });
+};
+
+module.exports.getComments = function(req, res, next) {
+    var Post = req.app.set('db').posts;
+
+    Post.findById(req.params.id, function(err, data) {
+        res.send(data.comments.slice(req.params.start, req.params.end));
+    });
 };

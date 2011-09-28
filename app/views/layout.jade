@@ -2,15 +2,17 @@
 html
     head
         title Example
-        script(type="text/javascript", src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js")
+        script(type="text/javascript", src="/public/scripts/jquery.min.js")
         link(href="/public/styles/main.css", rel="stylesheet", type="text/css")
-        link(rel="stylesheet", href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/base/jquery-ui.css", id="theme")
+        link(rel="stylesheet", href="/public/styles/jquery-ui.css", id="theme")
         link(rel="stylesheet", href="/public/jquery-fileupload/jquery.fileupload-ui.css")
         
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        - if (typeof(fbData) != 'undefined')
+            !=partial('shared/opengraph', fbData)
     body
         header.top
             h3 Mike's Musings

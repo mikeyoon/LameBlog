@@ -51,7 +51,13 @@ module.exports = function(app) {
             , 'users': db.model('User')
             , 'posts': db.model('BlogPost')
             , 'media': db.model('MediaItem')
-        })
+            , 'comments': db.model('Comment')
+        });
+
+        app.set('fbAppId', process.env.FACEBOOK_APP_ID);
+
+        app.set('sitename', 'LameBlog');
+
         app.set('version', '1.0.0');
     });
 

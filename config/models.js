@@ -18,6 +18,8 @@ module.exports = function(){
 
     mongoose.model('BlogPost', require('../app/models/blogpost'));
 
+    mongoose.model('Comment', require('../app/models/comment'));
+
     mongoose.model('User', require('../app/models/user'));
 
     mongoose.model('MediaItem', require('../app/models/mediaItem'));
