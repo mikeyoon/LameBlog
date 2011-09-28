@@ -20,5 +20,5 @@ module.exports = function(){
 
     mongoose.model('User', require('../app/models/user'));
 
-    mongoose.model('MediaItem', require('../app/models/mediaitem'));
+    mongoose.model('MediaItem', require('../app/models/mediaItem'));
 }
