@@ -67,26 +67,8 @@ body {
 	line-height: 18px;
 }
 
-header.top {
-    width: 736px;
-    border: 1px solid black;
-    background-color: gray;
-    margin-left: 160px;
-    margin-bottom: 50px;
-}
-
-div.left {
-    width: 160px;
-    float: left;
-    text-align: right;
-}
-
-article > header {
-    
-}
-
-article > footer {
-
+div > p {
+    line-height: 2;
 }
 
 /* Selection colours (easy to forget) */
@@ -109,13 +91,61 @@ px      68    160    252    344    436    528    620    712    804    896    */
 
 body {
 	width: 896px;
-	padding: 72px 48px 84px;
-	background: rgb(232,232,232);
+	padding: 48px 48px 84px;
+    font-family: verdana;
+	background: rgb(240,240,240);
+    font-size: .8em;
 	color: rgb(60,60,60);
 	-webkit-text-size-adjust: 100%; /* Stops Mobile Safari from auto-adjusting font-sizes */
 }
 
+header.top {
+    width: 640px;
+    color: gray;
+    /*margin-left: ;*/
+    margin-bottom: 50px;
+    padding-left: 18px;
+}
 
+div.left {
+    width: 620px;
+    float: left;
+}
+
+div.right {
+    float: right;
+    width: 160px;
+    padding: 24px;
+}
+
+article > header {
+    float: left;
+    width: 620px;
+    padding-left: 18px;
+    margin-bottom: 8px;
+}
+
+article > footer {
+    float: left;
+    width: 620px;
+    text-align: right;
+}
+
+article > div {
+    float: left;
+    width: 620px;
+    margin-bottom: 12px;
+    padding: 18px;
+    background: #FFF;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+}
+
+article > aside {
+    float: right;
+    width: 228px;
+}
 
 /*		Tablet Layout: 768px.
 		Gutters: 24px.

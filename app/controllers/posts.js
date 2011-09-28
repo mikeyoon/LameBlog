@@ -10,10 +10,14 @@ const md = require('node-markdown').Markdown;
 
 module.exports.index = function(req, res, next) {
     var Post = req.app.set('db').posts;
-    var skip = req.params.page ? req.params.page * 10 : 0;
+    var skip = req.query.page ? req.query.page * 10 : 0;
     var limit = 5;
 
-    Post.find(function(err, data) {
+    var tags = req.query.tags ? req.query.tags.split(',') : null;
+    console.log(tags);
+    var query = req.query.search;
+
+    Post.find({ tags: tags }, function(err, data) {
         res.render('post/index', { posts: data });
     }).limit(limit).skip(skip);
 };
@@ -24,14 +28,10 @@ module.exports.add = function(req, res, next) {
     var item = new Post();
     item.title = req.body.post.title;
     item.body = req.body.post.body;
-    item.path = '/' + item.title.replace(" ", "_");
+    item.path = '/' + item.title.replace(/ /g, "_");
     item.tags = req.body.post.tags.split(',');
     item.save(function(err) {
         res.redirect('posts' + item.path);
-//        res.send({
-//            success: true,
-//            path: item.path
-//        });
     });
 };
 
@@ -58,10 +58,8 @@ module.exports.view = function(req, res, next) {
     var Post = req.app.set('db').posts;
 
     Post.findByPath(req.params.id, function(err, data) {
-        console.log(data);
         res.render('post/view', {
-            title: data.title,
-            body: data.htmlbody
+            post: data
         });
     });
 };

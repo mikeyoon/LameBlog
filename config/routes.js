@@ -33,6 +33,8 @@ module.exports = function(app) {
 
     app.get('/admin', requiresAdmin, function(req, res, next) { accounts.index(req, res, next) });
 
+    app.all('/admin/*', requiresAdmin);
+    
     app.post('/admin/posts/add', function(req, res, next) { posts.add(req, res, next) });
 
     app.get('/admin/posts', function(req, res, next) { posts.index(req, res, next) });

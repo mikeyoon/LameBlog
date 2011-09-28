@@ -1,6 +1,22 @@
-- each post in posts
-    div
-        h3!=post.title
-        div!=post.htmlbody
-        div
-            a(href="javascript: //comment") comment
+link(rel="stylesheet", type="text/css", href="/public/highlight/styles/solarized_dark.css")
+
+script(type="text/javascript", src="/public/highlight/highlight.pack.js")
+
+script(type="text/javascript")
+    hljs.initHighlightingOnLoad();
+
+div.left
+    - each post in posts
+        article
+            header
+                h3
+                    a(href='/posts' + post.path)!=post.title
+
+            div!=post.htmlbody
+                p
+            footer
+                span!=post.createDate
+                a(href="javascript: //comment") comment
+
+div.right
+    span tags

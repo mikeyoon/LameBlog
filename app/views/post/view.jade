@@ -1,4 +1,23 @@
-div
-    h3!=title
+link(rel="stylesheet", type="text/css", href="/public/highlight/styles/solarized_dark.css")
 
-    div!=body
+script(type="text/javascript", src="/public/highlight/highlight.pack.js")
+
+script(type="text/javascript")
+    hljs.initHighlightingOnLoad();
+
+div.left
+    article
+        header
+            h3!=post.title
+
+        div!=post.htmlbody
+            p
+        footer
+            span!=post.createDate
+            a(href="javascript: //comment") comment
+
+div.right
+    div Tags
+        ul
+          - each tag in post.tags
+            li!=tag
