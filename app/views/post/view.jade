@@ -4,9 +4,11 @@ script(type="text/javascript", src="/public/highlight/highlight.pack.js")
 
 script(type="text/javascript")
     hljs.initHighlightingOnLoad();
-    $(document).ready(function() {
-        
-    });
+
+    LB.init('#{fbData.fbAppId}',
+        function() {
+            $(document).queue(LB.setupCommenting);
+        });
 
 div.left
     article
@@ -14,11 +16,23 @@ div.left
             h3!=post.title
 
         div!=post.htmlbody
-            p
+
         footer
             span!=post.createDate
-            a(href="javascript: //comment") comment
-
+    div.comments
+        - each comment in post.comments
+            p
+                div!=comment.name
+                div!=comment.message
+                div!=comment.createDate
+    div(class="login hide")
+        input#login-button(type="button", value="Login")
+    div(class="add-comment hide")
+        p Name:
+            span#comment-user
+        p Message:
+            textarea#comment-message
+        a#comment-link(href="javascript: //comment", post-id="#{post._id}") add comment
 div.right
     div Tags
         ul

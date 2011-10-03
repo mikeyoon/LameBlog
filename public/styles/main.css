@@ -26,7 +26,9 @@ footer, header, nav, section, audio, video {
 
 a img {border: 0;}
 
-
+.hide {
+    display: none;
+}
 
 /*	Typography presets
 	------------------	*/
@@ -137,14 +139,18 @@ article > div {
     margin-bottom: 12px;
     padding: 18px;
     background: #FFF;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
+    border: 1px solid gray;
+    /*box-shadow: 5px 5px 20px #000;*/
 }
 
 article > aside {
     float: right;
     width: 228px;
+}
+
+h3 a {
+    text-decoration: none;
+    color: black;
 }
 
 /*		Tablet Layout: 768px.

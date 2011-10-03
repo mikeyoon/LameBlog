@@ -56,7 +56,7 @@ module.exports.edit = function(req, res, next) {
 
 module.exports.view = function(req, res, next) {
     var Post = req.app.set('db').posts;
-
+    
     Post.findByPath(req.params.id, function(err, data) {
         res.render('post/view', {
             post: data,
@@ -80,12 +80,15 @@ module.exports.addComment = function(req, res, next) {
     var Post = req.app.set('db').posts;
     var Comment = req.app.set('db').comments;
 
-    Post.findById(req.params.id, function(err, data) {
+    Post.findById(req.params.postId, function(err, data) {
         var comment = new Comment({
             name: req.body.comment.name,
             email: req.body.comment.email,
             message: req.body.comment.message
         });
+
+        if (!data.comments)
+            data.comments = [ ];
 
         data.comments.push(comment);
         data.save(function(err) {

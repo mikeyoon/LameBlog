@@ -9,7 +9,8 @@
     const express = require('express')
     , mongoose = require('mongoose')
     , storage = require('../lib/storage')(process.env.STORAGE_PLATFORM || 'localfilestorage')
-    , form = require('connect-form');
+    , form = require('connect-form')
+    , FacebookClient = require('facebook-client').FacebookClient;
 
 /**
  *  Exports
@@ -59,6 +60,15 @@ module.exports = function(app) {
         app.set('sitename', 'LameBlog');
 
         app.set('version', '1.0.0');
+    });
+
+    app.configure(function() {
+        var fbClient = new FacebookClient(
+            process.env.FACEBOOK_APP_ID,
+            process.env.FACEBOOK_APP_SECRET
+        );
+
+        app.set('fbClient', fbClient);
     });
 
     //  Configure File Storage

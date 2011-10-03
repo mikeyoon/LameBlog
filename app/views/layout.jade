@@ -6,14 +6,17 @@ html
         link(href="/public/styles/main.css", rel="stylesheet", type="text/css")
         link(rel="stylesheet", href="/public/styles/jquery-ui.css", id="theme")
         link(rel="stylesheet", href="/public/jquery-fileupload/jquery.fileupload-ui.css")
-        
+        script(type="text/javascript", src="/public/scripts/main.js")
+
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         - if (typeof(fbData) != 'undefined')
             !=partial('shared/opengraph', fbData)
     body
+        div#fb-root
         header.top
             h3 Mike's Musings
         div!= body

@@ -9,7 +9,9 @@
 const home = require('../app/controllers/home')
     , posts = require('../app/controllers/posts')
     , accounts = require('../app/controllers/accounts')
-    , media = require('../app/controllers/media');
+    , media = require('../app/controllers/media')
+    , querystring = require('querystring');
+
 
 module.exports = function(app) {
 
@@ -51,14 +53,24 @@ module.exports = function(app) {
 };
 
 function requiresAuthorization(req, res, next) {
-    if (req.session.user != null)
-    {
-        next();
-        return;
-    }
-    else {
-        next(new Error('Unauthorized'));
-    }
+    var fb = req.app.set('fbClient');
+    fb.getSessionByRequestHeaders(req.headers)(function(fb_session) {
+        if (fb_session)
+        {
+            fb_session.isValid()(function(is_valid) {
+                if (is_valid){
+                    next();
+                    return;
+                }
+
+                next(new Error('Unauthorized'));
+            });
+        }
+        else {
+            next(new Error('Unauthorized'));
+        }
+
+    });
 }
 
 function requiresAdmin(req, res, next) {
