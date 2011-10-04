@@ -95,7 +95,11 @@ module.exports.addComment = function(req, res, next) {
 
         data.comments.push(comment);
         data.save(function(err) {
-            res.send(comment);
+            res.send({
+                name: comment.name,
+                message: comment.message,
+                displayDate: comment.displayDate
+            });
         });
     });
 };

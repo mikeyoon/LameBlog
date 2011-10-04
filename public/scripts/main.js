@@ -42,7 +42,8 @@ LB.setupCommenting = function(next) {
                     'comment[name]': user.name,
                     'comment[message]': $('#comment-message').val()
                 }).success(function(response) {
-                    $('<p><div>' + response.name + '</div><div>' + response.message +'</div><div>' + response.createDate + '</div></p>').appendTo('.comments');
+                    $('#commentTemplate').tmpl(response).appendTo('.comments');
+                    $('.add-comment').html('Thanks for your comment!');
                 });
             });
         }

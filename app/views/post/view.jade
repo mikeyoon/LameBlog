@@ -1,6 +1,15 @@
 link(rel="stylesheet", type="text/css", href="/public/highlight/styles/solarized_dark.css")
 
 script(type="text/javascript", src="/public/highlight/highlight.pack.js")
+script(type="text/javascript", src="/public/scripts/jquery.tmpl.min.js")
+
+script#commentTemplate(type="text/x-jquery-tmpl")
+    div
+        p.comment-header
+            strong ${name}
+            span |
+            span ${displayDate}
+        div.comment-body ${message}
 
 script(type="text/javascript")
     hljs.initHighlightingOnLoad();
