@@ -95,7 +95,7 @@ body {
 	width: 896px;
 	padding: 48px 48px 84px;
     font-family: verdana;
-	background: rgb(240,240,240);
+	background: white;
     font-size: .8em;
 	color: rgb(60,60,60);
 	-webkit-text-size-adjust: 100%; /* Stops Mobile Safari from auto-adjusting font-sizes */
@@ -123,23 +123,20 @@ div.right {
 article > header {
     float: left;
     width: 620px;
-    padding-left: 18px;
     margin-bottom: 8px;
 }
 
 article > footer {
     float: left;
     width: 620px;
-    text-align: right;
+    text-align: left;
 }
 
 article > div {
     float: left;
     width: 620px;
     margin-bottom: 12px;
-    padding: 18px;
-    background: #FFF;
-    border: 1px solid gray;
+    
     /*box-shadow: 5px 5px 20px #000;*/
 }
 
@@ -148,9 +145,30 @@ article > aside {
     width: 228px;
 }
 
+.comment-header {
+    background-color: rgb(240, 240, 240);
+    width: 620px;
+    padding-left: 6px;
+}
+
+.comment-body {
+    padding-left: 6px;
+    margin-bottom: 12px;
+}
+
+#comment-message {
+    width: 640px;
+    height: 150px;
+}
+
 h3 a {
     text-decoration: none;
     color: black;
+}
+
+hr {
+    border-bottom: 1px dashed gray;
+    width: 100%;
 }
 
 /*		Tablet Layout: 768px.

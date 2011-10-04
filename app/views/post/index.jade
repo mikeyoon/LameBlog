@@ -14,13 +14,14 @@ div.left
             header
                 h3
                     a(href='/posts' + post.path)!=post.title
+                span posted #{post.displayDate}
 
             div!=post.htmlbody
                 p
             footer
-                span posted #{post.displayDate}
                 span.fb-action
-                    <fb:like href="http://localhost:3000/posts#{post.path}" layout="button_count" show_faces="false" width="240" height="40" action="like" colorscheme="light"></fb:like>
+
+        hr
 
 div.right
     span tags
