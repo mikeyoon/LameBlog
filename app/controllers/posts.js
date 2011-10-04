@@ -13,11 +13,14 @@ module.exports.index = function(req, res, next) {
     var skip = req.query.page ? req.query.page * 10 : 0;
     var limit = 5;
 
-    var tags = req.query.tags ? req.query.tags.split(',') : null;
-    console.log(tags);
+    var where = { };
+
+    if (req.query.tags)
+        where.tags = req.query.tags.split(',');
+
     var query = req.query.search;
 
-    Post.find({ tags: tags }, function(err, data) {
+    Post.find(where, function(err, data) {
         res.render('post/index', { posts: data, fbAppId: req.app.set('fbAppId') });
     }).limit(limit).skip(skip);
 };
