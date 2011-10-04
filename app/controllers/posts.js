@@ -66,7 +66,7 @@ module.exports.view = function(req, res, next) {
             fbData: {
                 fbAppId: req.app.set('fbAppId'),
                 ogTitle: data.title,
-                ogUrl: 'http://' + req.app.set('host') + ':' + req.app.set('port') + '/posts' + data.path,
+                ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
                 ogSiteName: req.app.set('sitename'),
                 ogImageUrl: '',
                 ogDescription: ''

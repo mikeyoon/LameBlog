@@ -14,6 +14,7 @@ module.exports = function(app){
     this
       .set('version','1.0.0')
       .set('host', 'localhost')
+      .set('domain', process.env.SITE_URL + (port != 80 ? ':' + port : ''))
       .set('port', port)
       .set('env','local')
   });
@@ -22,6 +23,7 @@ module.exports = function(app){
     this
       .set('version','1.0.0')
       .set('host', process.env.SITE_URL)
+      .set('domain', process.env.SITE_URL + (port != 80 ? ':' + port : ''))
       .set('port', port)
       .set('env','production')
   });
