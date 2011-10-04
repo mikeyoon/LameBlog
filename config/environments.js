@@ -21,7 +21,7 @@ module.exports = function(app){
   app.configure('production', function (){
     this
       .set('version','1.0.0')
-      .set('host', 'http://ec2-50-18-0-196.us-west-1.compute.amazonaws.com:3000')
+      .set('host', process.env.SITE_URL)
       .set('port', port)
       .set('env','production')
   });
