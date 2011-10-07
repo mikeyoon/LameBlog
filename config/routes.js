@@ -9,6 +9,7 @@
 const home = require('../app/controllers/home')
     , posts = require('../app/controllers/posts')
     , accounts = require('../app/controllers/accounts')
+    , admin = require('../app/controllers/admin')
     , media = require('../app/controllers/media')
     , querystring = require('querystring');
 
@@ -25,7 +26,7 @@ module.exports = function(app) {
 
     app.post('/posts/markdown', function(req, res, next) { posts.renderMarkdown(req, res, next)});
 
-    app.get('/posts/:id', function(req, res, next) { posts.view(req, res, next) });
+    app.get('/posts/:id', function(req, res, next) { posts.getPost(req, res, next) });
 
     app.get('/admin/login', function(req, res, next) { accounts.loginForm(req, res, next) });
 
@@ -33,21 +34,25 @@ module.exports = function(app) {
 
     app.post('/admin/setup', function(req, res, next) { accounts.setup(req, res, next) });
 
-    app.get('/admin', requiresAdmin, function(req, res, next) { accounts.index(req, res, next) });
+    app.get('/admin', requiresAdmin, function(req, res, next) { admin.index(req, res, next) });
 
     app.all('/admin/*', requiresAdmin);
     
-    app.post('/admin/posts/add', function(req, res, next) { posts.add(req, res, next) });
+    app.post('/admin/posts/add', function(req, res, next) { admin.addPost(req, res, next) });
 
-    app.get('/admin/posts', function(req, res, next) { posts.index(req, res, next) });
+    app.get('/admin/posts/add', function(req, res, next) { admin.newPost(req, res, next) });
 
-    app.post('/admin/posts/:id', function(req, res, next) { posts.edit(req, res, next) });
+    app.get('/admin/posts', function(req, res, next) { admin.getPosts(req, res, next) });
 
-    app.delete('/admin/posts/:id', function(req, res, next) { posts.delete(req, res, next) });
+    app.get('/admin/posts/:id', function(req, res, next) { admin.getPost(req, res, next) });
+
+    app.post('/admin/posts/:id', function(req, res, next) { admin.editPost(req, res, next) });
+
+    app.post('/admin/posts/delete/:id', function(req, res, next) { admin.deletePost(req, res, next) });
 
     app.post('/admin/media/add', function(req, res, next) { media.add(req, res, next) });
 
-    app.get('/admin/media/index', function(req, res, next) { media.index(req, res, next) });
+    app.get('/admin/media', function(req, res, next) { media.index(req, res, next) });
 
     app.delete('/admin/media/:id', function(req, res, next) { media.delete(req, res, next) });
 };

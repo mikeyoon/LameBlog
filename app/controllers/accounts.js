@@ -25,7 +25,6 @@ module.exports.loginForm = function(req, res, next) {
 
     User.findOne({ userType: "admin" }, function(err, data) {
         if (data) {
-            console.log(data);
             res.render('admin/login');
         } else {
             res.render('admin/newadmin');

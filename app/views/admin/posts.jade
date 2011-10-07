@@ -1,29 +1,27 @@
-script(type="text/javascript", src="/public/markitup/jquery.markitup.js")
-script(type="text/javascript", src="/public/markitup/sets/markdown/set.js")
-script(type="text/javascript", src="/public/syntaxhighlighter/shCore.js")
-script(type="text/javascript", src="/public/syntaxhighlighter/shBrushCSharp.js")
-script(type="text/javascript", src="/public/syntaxhighlighter/shBrushJScript.js")
-script(type="text/javascript", src="/public/syntaxhighlighter/shBrushSql.js")
-script(type="text/javascript", src="/public/syntaxhighlighter/shBrushXml.js")
-
-link(rel="stylesheet", type="text/css", href="/public/markitup/skins/markitup/style.css")
-link(rel="stylesheet", type="text/css", href="/public/markitup/sets/markdown/style.css")
-link(rel="stylesheet", type="text/css", href="/public/syntaxhighlighter/styles/shCore.css")
-link(rel="stylesheet", type="text/css", href="/public/syntaxhighlighter/styles/shThemeDefault.css")
-
 script(type="text/javascript")
-
     $(document).ready(function() {
-        $('#postbody').markItUp(mySettings);
+        $('.delete-post').click(function() {
+            var id = $(this).attr('post-id');
+            $.post('/admin/posts/delete/' + id)
+                .success(function(data) {
+                    if (data.success)
+                    {
+                        $('#post-' + id).remove();
+                    }
+                });
+        });
     });
 
-form(method="POST", action="/admin/posts/add")
-    p add post
-        div Title: 
-            input(type="text", name="post[title]")
-        textarea#postbody(name="post[body]")
-    p
-        div Tags:
-            input(type="text", name="post[tags]")
-
-    input(type="submit", value="Create")
+div.left
+    - each post in posts
+        div(id='post-' + post._id)
+            div!=post.title
+                | 
+                a(href='/posts' + post.path) View
+                | 
+                a(href='/admin/posts/' + post._id) Edit
+                | 
+                a.delete-post(href='javascript: //Delete', post-id=post._id) Delete
+            div Posted: #{post.displayDate}, Comments: #{post.commentCount}
+            hr
+    a(href="/admin") Back

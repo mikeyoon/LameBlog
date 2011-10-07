@@ -93,7 +93,7 @@ px      68    160    252    344    436    528    620    712    804    896    */
 
 body {
 	width: 896px;
-	padding: 48px 48px 84px;
+	padding: 48px;
     font-family: verdana;
 	background: white;
     font-size: .8em;
@@ -105,49 +105,44 @@ header.top {
     width: 640px;
     color: gray;
     /*margin-left: ;*/
-    margin-bottom: 50px;
-    padding-left: 18px;
+    margin-bottom: 24px;
 }
 
 div.left {
-    width: 620px;
+    width: 640px;
     float: left;
 }
 
 div.right {
-    float: right;
+    float: left;
     width: 160px;
-    padding: 24px;
+    position: relative;
+    margin-left: 24px;
 }
 
 article > header {
     float: left;
-    width: 620px;
+    width: 640px;
     margin-bottom: 8px;
 }
 
 article > footer {
     float: left;
-    width: 620px;
+    width: 640px;
     text-align: left;
 }
 
 article > div {
     float: left;
-    width: 620px;
+    width: 640px;
     margin-bottom: 12px;
     
     /*box-shadow: 5px 5px 20px #000;*/
 }
 
-article > aside {
-    float: right;
-    width: 228px;
-}
-
 .comment-header {
     background-color: rgb(240, 240, 240);
-    width: 620px;
+    width: 634px;
     padding-left: 6px;
 }
 
@@ -157,11 +152,15 @@ article > aside {
 }
 
 #comment-message {
-    width: 640px;
+    width: 634px;
     height: 150px;
 }
 
-h3 a {
+#comment-user {
+    margin-right: 5px;
+}
+
+h4 a {
     text-decoration: none;
     color: black;
 }
@@ -169,6 +168,7 @@ h3 a {
 hr {
     border-bottom: 1px dashed gray;
     width: 100%;
+    margin-bottom: 8px;
 }
 
 /*		Tablet Layout: 768px.

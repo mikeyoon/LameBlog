@@ -29,6 +29,10 @@ BlogPost.virtual('htmlbody').get(function() {
     return md(this.body);
 });
 
+BlogPost.virtual('commentCount').get(function() {
+    return this.comments.length;
+});
+
 BlogPost.virtual('displayDate').get(function() {
     return dateformat(this.createDate, 'mm-dd-yyyy hh:MM TT');
 });

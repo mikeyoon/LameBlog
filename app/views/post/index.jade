@@ -1,4 +1,4 @@
-link(rel="stylesheet", type="text/css", href="/public/highlight/styles/solarized_dark.css")
+link(rel="stylesheet", type="text/css", href="/public/highlight/styles/github.css")
 
 script(type="text/javascript", src="/public/highlight/highlight.pack.js")
 
@@ -12,7 +12,7 @@ div.left
     - each post in posts
         article
             header
-                h3
+                h4
                     a(href='/posts' + post.path)!=post.title
                 span posted #{post.displayDate}
 
@@ -20,6 +20,7 @@ div.left
                 p
             footer
                 span.fb-action
+                    a(href="/posts" + post.path) Comments (#{post.commentCount})
 
         hr
 

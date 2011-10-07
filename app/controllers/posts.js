@@ -25,39 +25,11 @@ module.exports.index = function(req, res, next) {
     }).limit(limit).skip(skip);
 };
 
-module.exports.add = function(req, res, next) {
-    var Post = req.app.set('db').posts;
-
-    var item = new Post();
-    item.title = req.body.post.title;
-    item.body = req.body.post.body;
-    item.path = '/' + item.title.replace(/ /g, "_");
-    item.tags = req.body.post.tags.split(',');
-    item.save(function(err) {
-        res.redirect('posts' + item.path);
-    });
+module.exports.search = function(req, res, next) {
+    
 };
 
-module.exports.delete = function(req, res, next) {
-    var Post = req.app.set('db').posts;
-
-    Post.findById(req.params.id, function(err, data) {
-        data.delete();
-        res.send({
-            success: true
-        });
-    });
-};
-
-module.exports.edit = function(req, res, next) {
-    var Post = req.app.set('db').posts;
-
-    Post.findById(req.params.id, function(err, data) {
-        
-    });
-};
-
-module.exports.view = function(req, res, next) {
+module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
     
     Post.findByPath(req.params.id, function(err, data) {

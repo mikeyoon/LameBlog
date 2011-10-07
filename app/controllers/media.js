@@ -90,12 +90,17 @@ module.exports.delete = function(req, res, next) {
     Media.findById(req.params.id, function(err, data) {
         if (data) {
             data.remove();
-            if (data.thumbname) {
-                client.deleteFile('/' + data.thumbname);
-            }
 
             client.deleteFile('/' + data.filename, function(err, s3res) {
-                res.send({ success: true });
+                if (data.thumbname)
+                {
+                    client.deleteFile('/' + data.thumbname, function(err, tres) {
+                        res.send({ success: true });
+                    });
+                }
+                else
+                    res.send({ success: true });
+
             });
         };
     });

@@ -37,7 +37,17 @@ LB.setupCommenting = function(next) {
             $('.login').removeClass('hide').addClass('hide');
             $('.add-comment').removeClass('hide');
             $('#comment-user').html(user.name);
+
+            $('#fb-logout').click(function() {
+                FB.logout(function(response) {
+                    LB.setupCommenting();
+                });
+            });
+
             $('#comment-link').click(function() {
+                if (('#comment-message').val() == '')
+                    return false;
+                
                 $.post('/comment/' + $(this).attr('post-id'), {
                     'comment[name]': user.name,
                     'comment[message]': $('#comment-message').val()
@@ -50,6 +60,7 @@ LB.setupCommenting = function(next) {
         else
         {
             $('.login').removeClass('hide');
+            $('.add-comment').removeClass('hide').addClass('hide');
             LB.login(LB.setupCommenting);
             return;
         }

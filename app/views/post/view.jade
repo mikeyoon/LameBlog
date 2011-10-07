@@ -1,4 +1,4 @@
-link(rel="stylesheet", type="text/css", href="/public/highlight/styles/solarized_dark.css")
+link(rel="stylesheet", type="text/css", href="/public/highlight/styles/github.css")
 
 script(type="text/javascript", src="/public/highlight/highlight.pack.js")
 script(type="text/javascript", src="/public/scripts/jquery.tmpl.min.js")
@@ -46,6 +46,7 @@ div.left
             strong.small Leave a Comment
             p Name:
                 span#comment-user
+                a#fb-logout(href="javascript: //Logout") Logout of FB
             textarea#comment-message
             a#comment-link(href="javascript: //comment", post-id="#{post._id}") add comment
         
@@ -53,4 +54,5 @@ div.right
     div Tags
         ul
           - each tag in post.tags
-            li!=tag
+            li
+                a(href="/?tags=#{tag}")!=tag
