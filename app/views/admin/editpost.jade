@@ -1,0 +1,36 @@
+script(type="text/javascript", src="/public/markitup/jquery.markitup.js")
+script(type="text/javascript", src="/public/markitup/sets/markdown/set.js")
+
+link(rel="stylesheet", type="text/css", href="/public/markitup/skins/markitup/style.css")
+link(rel="stylesheet", type="text/css", href="/public/markitup/sets/markdown/style.css")
+
+script(type="text/javascript")
+
+    $(document).ready(function() {
+        $('#postbody').markItUp(mySettings);
+
+        $('form').submit(function(event) {
+            event.preventDefault();
+
+            var data = $(this).serialize();
+            $.post($(this).attr('action'), data)
+                .success(function(data) {
+                    if (data.success)
+                    {
+                        window.location = '/admin/posts';
+                    }
+                });
+        });
+    });
+
+form(method="POST", action="/admin/posts/" + post._id)
+    p Edit Post
+    div Title: 
+        input(type="text", name="post[title]", value=post.title)
+        textarea#postbody(name="post[body]")!=post.body
+    p
+        div Tags:
+            input(type="text", name="post[tags]", value=post.tags)
+
+    input(type="submit", value="Save")
+    input(type="button", value="Cancel", onclick="history.go(-1)")
