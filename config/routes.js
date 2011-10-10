@@ -54,6 +54,10 @@ module.exports = function(app) {
 
     app.get('/admin/media', function(req, res, next) { media.index(req, res, next) });
 
+    app.get('/admin/media/imagepicker', function(req, res, next) { media.picker(req, res, next) });
+
+    app.post('/admin/media/images/json/:page', function(req, res, next) { media.getImagesAsJson(req, res, next) });
+
     app.delete('/admin/media/:id', function(req, res, next) { media.delete(req, res, next) });
 };
 
@@ -85,6 +89,6 @@ function requiresAdmin(req, res, next) {
         return;
     }
     else {
-        res.redirect('admin/login');
+        res.redirect('/admin/login');
     }
 }

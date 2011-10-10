@@ -48,7 +48,7 @@ module.exports.getPost = function(req, res, next) {
 };
 
 module.exports.renderMarkdown = function(req, res, next) {
-    res.render('post/preview', { layout: false, body: md(decodeURIComponent(req.body.data)).replace("<code>", '<code class="brush: js">') });
+    res.render('post/preview', { layout: false, body: md(decodeURIComponent(req.body.data)) });
 };
 
 module.exports.addComment = function(req, res, next) {

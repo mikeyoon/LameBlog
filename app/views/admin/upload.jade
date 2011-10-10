@@ -83,9 +83,11 @@ div#fileupload
         table.files
             - each file in files
                 tr.template-download
+                    td.preview: a(href=file.url)
+                        img(src=file.thumburl)
                     td.name
                         a(href=file.url)!=file.filename
-                    td.size!=file.size
+                    td.size #{file.sizef} KB
                     td(colspan="2")
                     td.delete
                         button(data-type="DELETE", data-url='/admin/media/' + file._id) Delete

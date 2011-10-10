@@ -7,7 +7,9 @@
  */
 
 const knox = require('knox'),
-    im = require('imagemagick');
+    im = require('imagemagick'),
+    flow = require('flow'),
+    PAGE_SIZE = 4;
 
 var client = knox.createClient({
     key: process.env.S3_KEY
@@ -22,59 +24,72 @@ module.exports.add = function(req, res, next) {
             var fi = files['files[]'];
             var Media = req.app.set('db').media;
 
-            var uploadImage = function(thumb) {
-                client.putFile(fi.path, '/' + fi.name, function(err, s3res) {
-                    if (err)
-                    {
-                        console.log(err);
-                        res.send({ error: err });
-                    }
-                    else
-                    {
-                        var item = new Media();
-                        item.filename = fi.name;
-                        item.filetype = 'text';
-                        item.url = 'http://lameblog.s3.amazonaws.com/' + fi.name; //response url isn't filled in for some reason
-                        item.thumburl = 'http://lameblog.s3.amazonaws.com/' + thumb;
-                        item.thumbname = thumb;
-                        item.size = fi.size;
-                        item.save(function(err) {
-                            res.send([{
-                                name: fi.name,
-                                size: fi.size,
-                                url: item.url,
-                                thumbnail_url: thumb ? item.thumburl : null,
-                                delete_url: item._id,
-                                delete_type: 'DELETE'
-                            }]);
-                        });
-                    }
-                });
-            };
+            var ename = fi.name.replace(/ /g, '_');
+            var thumb = 'thumb-' + ename;
+            var inline = 'inline-' + ename
+
 
             if (fi.mime.indexOf('image') != -1)
             {
-                im.resize({
-                    srcPath: fi.path,
-                    dstPath: fi.path + ".thumb",
-                    width: 128,
-                    height: 128
-                }, function(err, stdout, stderr) {
-                    if (err) throw err;
-                    console.log('resized');
-
-                    client.putFile(fi.path + ".thumb", '/thumb-' + fi.name, function(err, s3res) {
-                        if (err)
-                        {
+                flow.exec(
+                    function() {
+                        im.resize({
+                            srcPath: fi.path,
+                            dstPath: fi.path + ".inline",
+                            width: 400
+                        }, this);
+                    }, function(err, stdout, stderr) {
+                        im.resize({
+                            srcPath: fi.path,
+                            dstPath: fi.path + ".thumb",
+                            width: 128
+                        }, this);
+                    }, function(err, stdout, stderr) {
+                        client.putFile(fi.path + ".thumb", thumb, this);
+                    }, function(err, s3res) {
+                        if (err) {
                             console.log(err);
                             res.send({ error: err });
                         }
-                        else
-                        {
-                            uploadImage('thumb-' + fi.name);
+                        else {
+                            client.putFile(fi.path + '.inline', inline, this);
                         }
-                    });
-                });
+                    }, function(err, s3res) {
+                        if (err) {
+                            console.log(err);
+                            res.send({ error: err });
+                        }
+                        else {
+                            client.putFile(fi.path, ename, this);
+                        }
+                    }, function(err, s3res) {
+                        if (err) {
+                            console.log(err);
+                            res.send({ error: err });
+                        } else {
+                            var item = new Media();
+                            item.filename = ename;
+                            item.filetype = 'text';
+                            item.url = 'http://lameblog.s3.amazonaws.com/' + ename;
+                            item.thumburl = 'http://lameblog.s3.amazonaws.com/' + thumb;
+                            item.inlineurl = 'http://lameblog.s3.amazonaws.com/' + inline;
+                            item.thumbname = thumb;
+                            item.inlinename = inline;
+                            item.size = fi.size;
+                            item.save(function(err) {
+
+                                res.send([{
+                                    name: ename,
+                                    size: fi.size,
+                                    url: item.url,
+                                    thumbnail_url: thumb ? item.thumburl : null,
+                                    delete_url: item._id,
+                                    delete_type: 'DELETE'
+                                }]);
+                            });
+                        }
+                    }
+                );
             }
         });
     }
@@ -91,18 +106,61 @@ module.exports.delete = function(req, res, next) {
         if (data) {
             data.remove();
 
-            client.deleteFile('/' + data.filename, function(err, s3res) {
-                if (data.thumbname)
-                {
-                    client.deleteFile('/' + data.thumbname, function(err, tres) {
+            flow.exec(
+                function() { //Delete full size file
+                    client.deleteFile('/' + data.filename, this);
+                }, function(err, s3res) { //Delete thumbnail
+                    if (data.thumbname)
+                    {
+                        client.deleteFile('/' + data.thumbname, this);
+                    }
+                    else
                         res.send({ success: true });
-                    });
-                }
-                else
+                }, function(err, s3res) { //Delete inline file
+                    if (data.inlinename) {
+                        client.deleteFile('/' + data.inlinename, this);
+                    } else
+                        res.send({ success: true });
+                }, function(err, s3res) { //Finish
                     res.send({ success: true });
-
-            });
+                }
+            );
         };
+    });
+};
+
+module.exports.getImagesAsJson = function(req, res, next) {
+    var Media = req.app.set('db').media;
+
+    var page = req.params.page;
+
+    console.log(page);
+
+    Media.find({}, [], { skip: (page - 1) * PAGE_SIZE, limit: PAGE_SIZE }, function(err, data) {
+        res.send({
+            images: data
+        });
+    });
+};
+
+module.exports.picker = function(req, res, next) {
+    var Media = req.app.set('db').media;
+
+    Media.count({}, function(err, count) {
+        var pages = [ ];
+
+        for (var ii = 0;ii<Math.ceil(count / PAGE_SIZE);ii++)
+        {
+            pages.push(ii + 1);
+        }
+
+        Media.find({}, [], { limit: PAGE_SIZE }, function(err, data) {
+            res.render('admin/imagepicker', {
+                layout: false,
+                pages: pages.splice(1),
+                images: data
+            });
+        });
     });
 };
 
@@ -110,7 +168,6 @@ module.exports.index = function(req, res, next) {
     var Media = req.app.set('db').media;
 
     Media.find({}, function(err, data) {
-        console.log(data);
         res.render('admin/upload', { files: data });
     });
 };

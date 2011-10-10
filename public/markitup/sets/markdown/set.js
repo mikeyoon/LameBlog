@@ -30,7 +30,22 @@ mySettings = {
 			return markItUp.line+'. ';
 		}},
 		{separator:'---------------' },
-		{name:'Picture', key:'P', replaceWith:'![[![Alternative text]!]]([![Url:!:http://]!] "[![Title]!]")'},
+		{name:'Picture', key:'P', replaceWith: function(p) {
+            var popup = window.open('/admin/media/imagepicker', '', 'width=650,height=500');
+            var thumb, url;
+            popup.onload = function() {
+                $(popup.document).find('#button-inline').click(function() {
+                    var selected = $(popup.document).find('.selected');
+                    var alt = $(popup.document).find('#image-alt').val();
+                    var title = $(popup.document).find('#image-title').val();
+                    thumb = selected.attr('thumb');
+                    url = selected.attr('url');
+                    popup.close();
+                    var md = '![' + alt + '](' + url + ' "' + title + '")';
+                    p.textarea.value = p.textarea.value.slice(0, p.caretPosition) + md + p.textarea.value.substring(p.caretPosition);
+                });
+            };
+        }},
 		{name:'Link', key:'L', openWith:'[', closeWith:']([![Url:!:http://]!] "[![Title]!]")', placeHolder:'Your text to link here...' },
 		{separator:'---------------'},	
 		{name:'Quotes', openWith:'> '},

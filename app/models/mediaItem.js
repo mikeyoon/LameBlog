@@ -14,7 +14,13 @@ var MediaItem = module.exports = new Schema({
     , filetype: String
     , url: String
     , thumburl: String
+    , inlineurl: String
     , thumbname: String
+    , inlinename: String
     , size: Number
     , createDate: { type: Date, default: Date.now }
+});
+
+MediaItem.virtual('sizef').get(function() {
+    return (this.size / 1024).toFixed(2);
 });

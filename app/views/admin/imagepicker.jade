@@ -1,0 +1,57 @@
+!!! 5
+html
+    head
+        link(rel="stylesheet", href="/public/mobilyselect/css/default.css")
+        script(type="text/javascript", src="/public/scripts/jquery.min.js")
+        script(type="text/javascript", src="/public/mobilyselect/js/mobilyselect.js")
+        script(type="text/javascript", src="/public/scripts/jquery.tmpl.min.js")
+        script(type="text/javascript")
+            $(document).ready(function() {
+                $('.selector').mobilyselect({
+                    collection: 'page-1',
+                    animation: 'absolute',
+                    listClass: 'selecterContent', // main container
+                    btnsClass: 'selecterBtns',
+                    btnActiveClass: 'active', // add class name to the button
+                    elements: 'li',
+                    onChange: function() {
+                        var page = $('.active').attr('page');
+                        $.post('/admin/media/images/json/' + page)
+                            .success(function(data) {
+                                $('#content').html('');
+                                for(var ii = 0;ii<data.images.length;ii++)
+                                {
+                                    $('#imageTemplate').tmpl({ page: page, thumburl: data.images[ii].thumburl, url: data.images[ii].inlineurl }).appendTo('#content');
+                                }
+                            });
+                    }
+                });
+
+                $('.image-select').live('click', function() {
+                    $('.image-select').removeClass('selected');
+                    $(this).addClass('selected');
+                });
+            });
+
+        script#imageTemplate(type="text/x-jquery-tmpl")
+            li(class="page-${page}")
+                a.image-select(href="#", url="${url}", thumb="${thumburl}"): image(src="${thumburl}")
+    body
+        div.selector
+            div.selecterBtns
+                ul.nolist
+                    li: a(href="#", rel="page-1", page="1", class="active") Page 1
+                    - each page in pages
+                        li: a(href="#", rel="page-" + page, page=page) Page #{page}
+            div.selecterContent
+                ul#content.nolist
+                    - each image in images
+                        li.page-1: a.image-select(href="#", url=image.inlineurl, thumb=image.thumburl): image(src=image.thumburl)
+        div.options
+            p Title:
+                input#image-title(type="text")
+            p Alt Text:
+                input#image-alt(type="text")
+            p
+                input#button-inline(type="button", value="Add Inline")
+                input#button-link(type="button", value="Add Link")
