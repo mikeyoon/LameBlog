@@ -45,7 +45,7 @@ LB.setupCommenting = function(next) {
             });
 
             $('#comment-link').click(function() {
-                if (('#comment-message').val() == '')
+                if ($('#comment-message').val() == '')
                     return false;
                 
                 $.post('/comment/' + $(this).attr('post-id'), {
@@ -53,7 +53,7 @@ LB.setupCommenting = function(next) {
                     'comment[message]': $('#comment-message').val()
                 }).success(function(response) {
                     $('#commentTemplate').tmpl(response).appendTo('.comments');
-                    $('.add-comment').html('Thanks for your comment!');
+                    $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
                 });
             });
         }

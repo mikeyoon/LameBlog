@@ -19,10 +19,12 @@ block metas
 block content
     script#commentTemplate(type="text/x-jquery-tmpl")
         div
-            p.comment-header
-                strong ${name}
-                span |
-                span ${displayDate}
+            div.comment-header
+                div.comment-header-content
+                    strong ${name}
+                    span.separator |
+                    span Posted ${displayDate}
+
             div.comment-body ${message}
 
     script(type="text/javascript")
@@ -46,18 +48,20 @@ block content
         h4 Comments
         - each comment in post.comments
             div
-                p.comment-header
-                    strong!=comment.name
-                    span |
-                    span!=comment.displayDate
+                div.comment-header
+                    div.comment-header-content
+                        strong!=comment.name
+                        span.separator |
+                        span Posted #{comment.displayDate}
 
                 div.comment-body!=comment.message
     div
         span(class="login hide")
             div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="1", onlogin="LB.setupCommenting()") Login to comment
         span(class="add-comment hide")
-            strong.small Leave a Comment
-            p Logged in as:
+            h5.small Leave a Comment
+            p Logged in as
+                span.separator :
                 span#comment-user(class="label")
 
             p: textarea#comment-message(rows="5", class="xxlarge span10")
