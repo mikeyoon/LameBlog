@@ -1,28 +1,32 @@
-link(rel="stylesheet", type="text/css", href="/public/highlight/styles/github.css")
+extends ../layout
 
-script(type="text/javascript", src="/public/highlight/highlight.pack.js")
+block scripts
+    script(type="text/javascript", src="/public/highlight/highlight.pack.js")
 
-script(type="text/javascript")
-    hljs.initHighlightingOnLoad();
-    $(document).ready(function() {
-        LB.init('#{fbAppId}');
-    });
+block styles
+    link(rel="stylesheet", type="text/css", href="/public/highlight/styles/github.css")
 
-div.left
+block content
+    script(type="text/javascript")
+        hljs.initHighlightingOnLoad();
+        $(document).ready(function() {
+            LB.init('#{fbAppId}');
+        });
+
+
     - each post in posts
         article
             header
-                h4
+                h3
                     a(href='/posts' + post.path)!=post.title
-                span posted #{post.displayDate}
+                em posted #{post.displayDate}
 
-            div!=post.htmlbody
-                p
-            footer
-                span.fb-action
-                    a(href="/posts" + post.path) Comments (#{post.commentCount})
+            p!=post.htmlbody
+                
+            p: span.fb-action
+                a.btn(href="/posts" + post.path) Comments (#{post.commentCount})
 
         hr
 
-div.right
+block sidebar
     span tags

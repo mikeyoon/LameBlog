@@ -3,7 +3,7 @@ html
     head
         title Example
         script(type="text/javascript", src="/public/scripts/jquery.min.js")
-        link(href="/public/styles/main.css", rel="stylesheet", type="text/css")
+        link(href="/public/styles/bootstrap.min.css", rel="stylesheet", type="text/css")
         link(rel="stylesheet", href="/public/jquery-ui/css/ui-lightness/jquery-ui-1.8.16.custom.css", id="theme")
         link(rel="stylesheet", href="/public/jquery-fileupload/jquery.fileupload-ui.css")
         script(type="text/javascript", src="/public/scripts/main.js")
@@ -13,10 +13,19 @@ html
         <![endif]-->
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        - if (typeof(fbData) != 'undefined')
-            !=partial('shared/opengraph', fbData)
+        block scripts
+        block styles
+        block metas
     body
         div#fb-root
-        header.top
-            h3 Mike's Musings
-        div!= body
+        div.row
+            div.span1 &nbsp;
+            div.span15
+                h3 Mike's Musings
+        div.row
+            div.span1 &nbsp;
+            div.span10
+                block content
+            div.span4
+                block sidebar
+            div.span1 &nbsp;

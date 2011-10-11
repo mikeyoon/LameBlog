@@ -1,27 +1,30 @@
-script(type="text/javascript")
-    $(document).ready(function() {
-        $('.delete-post').click(function() {
-            var id = $(this).attr('post-id');
-            $.post('/admin/posts/delete/' + id)
-                .success(function(data) {
-                    if (data.success)
-                    {
-                        $('#post-' + id).remove();
-                    }
-                });
-        });
-    });
+extends ../layout
 
-div.left
+block content
+    script(type="text/javascript")
+        $(document).ready(function() {
+            $('.delete-post').click(function() {
+                var id = $(this).attr('post-id');
+                $.post('/admin/posts/delete/' + id)
+                    .success(function(data) {
+                        if (data.success)
+                        {
+                            $('#post-' + id).remove();
+                        }
+                    });
+            });
+        });
+
+
     - each post in posts
         div(id='post-' + post._id)
             div!=post.title
-                | 
+                |
                 a(href='/posts' + post.path) View
-                | 
+                |
                 a(href='/admin/posts/' + post._id) Edit
-                | 
+                |
                 a.delete-post(href='javascript: //Delete', post-id=post._id) Delete
             div Posted: #{post.displayDate}, Comments: #{post.commentCount}
             hr
-    a(href="/admin") Back
+    a.btn.primary(href="/admin") Back

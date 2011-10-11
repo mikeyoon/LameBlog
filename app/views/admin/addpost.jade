@@ -1,33 +1,46 @@
-script(type="text/javascript", src="/public/markitup/jquery.markitup.js")
-script(type="text/javascript", src="/public/markitup/sets/markdown/set.js")
+extends ../layout
 
-link(rel="stylesheet", type="text/css", href="/public/markitup/skins/markitup/style.css")
-link(rel="stylesheet", type="text/css", href="/public/markitup/sets/markdown/style.css")
+block scripts
+    script(type="text/javascript", src="/public/markitup/jquery.markitup.js")
+    script(type="text/javascript", src="/public/markitup/sets/markdown/set.js")
 
-script(type="text/javascript")
+block styles
+    link(rel="stylesheet", type="text/css", href="/public/markitup/skins/markitup/style.css")
+    link(rel="stylesheet", type="text/css", href="/public/markitup/sets/markdown/style.css")
 
-    $(document).ready(function() {
-        $('#postbody').markItUp(mySettings);
+block content
+    script(type="text/javascript")
 
-        $('form').submit(function(event) {
-            event.preventDefault();
-            
-            var data = $(this).serialize();
-            $.post($(this).attr('action'), data)
-                .success(function(data) {
-                    alert(data.path);
-                });
+        $(document).ready(function() {
+            $('#postbody').markItUp(mySettings);
+
+            $('form').submit(function(event) {
+                event.preventDefault();
+
+                var data = $(this).serialize();
+                $.post($(this).attr('action'), data)
+                    .success(function(data) {
+                        alert(data.path);
+                    });
+            });
         });
-    });
 
-form(method="POST", action="/admin/posts/add")
-    p Create Post
-    div Title:
-        input(type="text", name="post[title]")
-        textarea#postbody(name="post[body]")
-    p
-        div Tags:
-            input(type="text", name="post[tags]")
+    hr
+    form(method="POST", action="/admin/posts/add", class="form-stacked")
+        fieldset
+            legend Create a Post
+            div.clearfix
+                label(for="post-title") Title:
+                div.input
+                    input#post-title(type="text", name="post[title]")
+            div.clearfix
+                label(for="postbody") Body:
+                div.input
+                    textarea#postbody(name="post[body]")
+            div.clearfix
+                label(for="post-tags") Tags:
+                div.input
+                    input#post-tags(type="text", name="post[tags]")
 
-    input(type="submit", value="Save")
-    input(type="button", value="Cancel", onclick="history.go(-1)")
+        input(type="submit", value="Save", class="primary btn")
+        button(value="Cancel", onclick="history.go(-1)")

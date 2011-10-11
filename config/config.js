@@ -41,6 +41,9 @@ module.exports = function(app) {
         this
             .set('views', __dirname + '/../app/views')
             .set('view engine', 'jade')
+            .set('view options', {
+                layout: false
+            })
             .use('/public', express.static(__dirname + '/../public'));
     });
 

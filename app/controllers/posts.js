@@ -21,7 +21,7 @@ module.exports.index = function(req, res, next) {
     var query = req.query.search;
 
     Post.find(where, function(err, data) {
-        res.render('post/index', { posts: data, fbAppId: req.app.set('fbAppId') });
+        res.render('post/index', { layout: false, posts: data, fbAppId: req.app.set('fbAppId') });
     }).limit(limit).skip(skip);
 };
 
@@ -34,6 +34,7 @@ module.exports.getPost = function(req, res, next) {
     
     Post.findByPath(req.params.id, function(err, data) {
         res.render('post/view', {
+            layout: false,
             post: data,
             fbData: {
                 fbAppId: req.app.set('fbAppId'),

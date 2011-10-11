@@ -1,6 +1,15 @@
-form(method="POST")
-    p Email:
-        input(name="login[email]", type="text")
-    p Password:
-        input(name="login[password]", type="password")
-    input(type="submit", value="Login")
+extends ../layout
+
+block content
+    hr
+    form(method="POST")
+        fieldset
+            legend Admin Login
+            div.clearfix
+                label(for="text-email") Email:
+                div.input: input.xlarge#text-email(name="login[email]", type="text")
+            div.clearfix
+                label(for="text-password") Password:
+                div.input: input.xlarge#text-password(name="login[password]", type="password")
+            div.clearfix
+                div.input: input(type="submit", value="Login", class="btn primary")
