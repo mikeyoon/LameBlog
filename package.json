@@ -19,7 +19,7 @@
     },
     "dependencies" : {
         "express" : "2.4.7",
-        "jade" : "0.14.0",
+        "jade" : "0.16.2",
         "connect" : "1.6.1",
         "mongoose" : "2.3.0",
         "knox" : "0.0.9",
