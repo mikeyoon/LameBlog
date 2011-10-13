@@ -31,8 +31,7 @@ module.exports = function(app) {
             .use(express.cookieParser())
             .use(form({ keepExtensions: true}))
             .use(express.bodyParser())
-            .use(express.errorHandler({dumpException: true, showStack: true}))
-            .use(express.session({ secret: 'secret key'}))
+            .use(express.errorHandler({dumpException: true, showStack: true}));
     });
 
     //  Add template engine
