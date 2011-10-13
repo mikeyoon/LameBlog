@@ -79,5 +79,9 @@ module.exports = function(app) {
         app.set('media', storage);
     });
 
+    app.configure(function() {
+        app.set('site_name', 'Mike\'s Musings');
+    });
+
     return app;
 }

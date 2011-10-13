@@ -38,10 +38,10 @@ module.exports.getPost = function(req, res, next) {
             post: data,
             fbData: {
                 fbAppId: req.app.set('fbAppId'),
-                ogTitle: data.title,
+                ogTitle: req.app.set('site_name') + ' - ' + data.title,
                 ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
                 ogSiteName: req.app.set('sitename'),
-                ogImageUrl: '',
+                ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
                 ogDescription: ''
             }
         });
