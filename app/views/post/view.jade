@@ -66,7 +66,7 @@ block content
 
             p: textarea#comment-message(rows="5", class="xxlarge span11")
             a#fb-logout(class="btn small", href="javascript: //Logout") Logout of FB
-            a#comment-link(class="btn small primary pull-right", href="javascript: //comment", post-id="#{post._id}") Add Comment
+            a#comment-link(class="btn small primary pull-right", href="javascript: //comment", data-href=fbData.ogUrl, post-id="#{post._id}") Add Comment
         
 block sidebar
     div Tags
