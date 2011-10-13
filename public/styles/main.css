@@ -1,4 +1,8 @@
 
+body {
+    padding-top: 24px;
+}
+
 .comment-header {
     background-color: rgb(240, 240, 240);
     padding-left: 6px;
@@ -21,8 +25,30 @@
 }
 
 #comment-message {
+    
 }
 
 #comment-user {
     margin-right: 5px;
+}
+
+.divider {
+    border: 1px #daa520 solid;
+}
+
+.side-divider {
+    border: 1px #d3d3d3 solid;
+}
+
+.footer {
+    height: 40px;
+    padding-top: 30px;
+}
+
+h2.title a {
+    color: #708090;
+}
+
+.undecorated, a.undecorated:hover {
+    text-decoration: none;
 }

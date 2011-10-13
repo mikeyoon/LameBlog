@@ -55,7 +55,7 @@ block content
                         span Posted #{comment.displayDate}
 
                 div.comment-body!=comment.message
-    div
+    div.padded-bottom
         span(class="login hide")
             div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="1", onlogin="LB.setupCommenting()") Login to comment
         span(class="add-comment hide")
@@ -64,7 +64,7 @@ block content
                 span.separator :
                 span#comment-user(class="label")
 
-            p: textarea#comment-message(rows="5", class="xxlarge span10")
+            p: textarea#comment-message(rows="5", class="xxlarge span11")
             a#fb-logout(class="btn small", href="javascript: //Logout") Logout of FB
             a#comment-link(class="btn small primary pull-right", href="javascript: //comment", post-id="#{post._id}") Add Comment
         
