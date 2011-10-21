@@ -2,6 +2,12 @@ extends ../layout
 
 block scripts
     script(type="text/javascript", src="/public/highlight/highlight.pack.js")
+    script(type="text/javascript")
+        $(document).ready(function() {
+            $('.pagination li:not(.disabled) a').click(function() {
+                window.location = "/?page=" + $(this).attr('pg');
+            });
+        });
 
 block styles
     link(rel="stylesheet", type="text/css", href="/public/highlight/styles/github.css")
@@ -27,6 +33,9 @@ block content
                 a.btn.small(href="/posts" + post.path) Comments (#{post.commentCount})
 
         hr
+            
+    if pageCount > 1
+        !=partial('paging', { pageCount: pageCount, pages: pages, currentPage: currentPage })
 
 block sidebar
     span tags

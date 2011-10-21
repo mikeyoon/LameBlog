@@ -3,10 +3,12 @@ extends layout
 block scripts
     script(type="text/javascript", src="/public/markitup/jquery.markitup.js")
     script(type="text/javascript", src="/public/markitup/sets/markdown/set.js")
+    script(type="text/javascript", src="/public/chosen/chosen.jquery.min.js")
 
 block styles
     link(rel="stylesheet", type="text/css", href="/public/markitup/skins/markitup/style.css")
     link(rel="stylesheet", type="text/css", href="/public/markitup/sets/markdown/style.css")
+    link(rel="stylesheet", type="text/css", href="/public/chosen/chosen.css")
 
 block content
     script(type="text/javascript")
@@ -20,8 +22,25 @@ block content
                 var data = $(this).serialize();
                 $.post($(this).attr('action'), data)
                     .success(function(data) {
-                        alert(data.path);
+                        window.location = '/posts' + data.path;
                     });
+            });
+
+            $('#add-tag').click(function() {
+                $.post('/admin/tags/' + $('#post-new-tags').val())
+                    .success(function(data) {
+                        if (data.success)
+                        {
+                            alert('Tag Added');
+                            $('#post-tags').append($('<option>').text($('#post-new-tags').val()));
+                            $('#post-new-tags').val('');
+                            $('#post-tags').trigger("liszt:updated");
+                        }
+                    });
+            });
+
+            $('#post-tags').chosen({
+                is_multiple: true
             });
         });
 
@@ -40,7 +59,15 @@ block content
             div.clearfix
                 label(for="post-tags") Tags:
                 div.input
-                    input#post-tags(type="text", name="post[tags]")
-
+                    select#post-tags(name="post[tags]", multiple="multiple")
+                        - each tag in tags
+                            option!=tag.name
+            div.clearfix
+                label(for="post-new-tags") New Tag:
+                div.input
+                    input#post-new-tags(type="text", name="post[tags]")
+                    &nbsp;
+                    button.btn.primary#add-tag(type="button") Add Tag
         input(type="submit", value="Save", class="primary btn")
-        button(value="Cancel", onclick="history.go(-1)")
+        &nbsp;
+        button.btn(onclick="history.go(-1)") Cancel

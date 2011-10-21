@@ -54,6 +54,7 @@ module.exports = function(app) {
             , 'users': db.model('User')
             , 'posts': db.model('BlogPost')
             , 'media': db.model('MediaItem')
+            , 'tag': db.model('Tag')
             , 'comments': db.model('Comment')
         });
 

@@ -33,6 +33,9 @@ block content
         LB.init('#{fbData.fbAppId}',
             function() {
                 $(document).queue(LB.setupCommenting);
+
+                $.ajax('')
+                $("#commentTemplate");
             });
 
     article
@@ -45,7 +48,7 @@ block content
         footer
             div.fb-like(data-send="true", data-width="450", data-href=fbData.ogUrl, data-show-faces="false")
     div.comments
-        h4 Comments
+        h4#comment-list Comments
         - each comment in post.comments
             div
                 div.comment-header

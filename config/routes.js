@@ -37,6 +37,8 @@ module.exports = function(app) {
     app.get('/admin', requiresAdmin, function(req, res, next) { admin.index(req, res, next) });
 
     app.all('/admin/*', requiresAdmin);
+
+    app.post('/admin/tags/:name', function(req, res, next) { admin.addTag(req, res, next) });
     
     app.post('/admin/posts/add', function(req, res, next) { admin.addPost(req, res, next) });
 

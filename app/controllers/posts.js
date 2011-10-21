@@ -8,21 +8,37 @@
 
 const md = require('node-markdown').Markdown;
 
+const PAGE_SIZE = 2;
+
 module.exports.index = function(req, res, next) {
     var Post = req.app.set('db').posts;
-    var skip = req.query.page ? req.query.page * 10 : 0;
-    var limit = 5;
+    var skip = req.query.page ? (req.query.page - 1) * PAGE_SIZE : 0;
+    var limit = PAGE_SIZE;
 
     var where = { };
 
+    console.log(req.query.tags);
     if (req.query.tags)
-        where.tags = req.query.tags.split(',');
+        where.tags = req.query.tags;
 
     var query = req.query.search;
 
-    Post.find(where, function(err, data) {
-        res.render('post/index', { layout: false, posts: data, fbAppId: req.app.set('fbAppId') });
-    }).limit(limit).skip(skip);
+    Post.count(where, function(err, postCount) {
+        var pages = [];// = new Array();
+        for (var ii = 0;ii < Math.ceil(postCount / PAGE_SIZE);ii++)
+            pages.push(ii + 1);
+
+        Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, function(err, data) {
+            res.render('post/index', {
+                layout: false,
+                posts: data,
+                fbAppId: req.app.set('fbAppId'),
+                pageCount: pages.length,
+                pages: pages,
+                currentPage: req.query.page ? req.query.page : 1
+            });
+        });
+    });
 };
 
 module.exports.search = function(req, res, next) {
@@ -33,18 +49,24 @@ module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
     
     Post.findByPath(req.params.id, function(err, data) {
-        res.render('post/view', {
-            layout: false,
-            post: data,
-            fbData: {
-                fbAppId: req.app.set('fbAppId'),
-                ogTitle: req.app.set('site_name') + ' - ' + data.title,
-                ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
-                ogSiteName: req.app.set('sitename'),
-                ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
-                ogDescription: ''
-            }
-        });
+        if (data)
+        {
+            res.render('post/view', {
+                layout: false,
+                post: data,
+                fbData: {
+                    fbAppId: req.app.set('fbAppId'),
+                    ogTitle: req.app.set('site_name') + ' - ' + data.title,
+                    ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
+                    ogSiteName: req.app.set('sitename'),
+                    ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
+                    ogDescription: ''
+                }
+            });
+        }
+        else {
+            res.redirect('/');
+        }
     });
 };
 
@@ -81,6 +103,9 @@ module.exports.getComments = function(req, res, next) {
     var Post = req.app.set('db').posts;
 
     Post.findById(req.params.id, function(err, data) {
-        res.send(data.comments.slice(req.params.start, req.params.end));
+        res.send({
+            comments: data.comments.slice(req.params.start, req.params.end),
+            totalComments: data.comments.length
+        });
     });
 };

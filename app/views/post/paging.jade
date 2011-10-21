@@ -1,0 +1,17 @@
+div.pagination
+  ul
+    if currentPage == 1
+        li.prev.disabled: a(href="#") &larr; Previous
+    else
+        li.prev: a(href="#", pg=currentPage - 1) &larr; Previous
+
+    - each page in pages
+        if page == currentPage
+            li.active: a(href="#")!=page
+        else
+            li: a(href="#", pg=page)!=page
+
+    if currentPage < pageCount
+        li.next: a(href="#", pg=currentPage - -1) Next &rarr;
+    else
+        li.next.disabled: a(href="#") Next &rarr;

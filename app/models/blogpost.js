@@ -22,6 +22,7 @@ var BlogPost = module.exports = new Schema({
     , comments: [Comment]
     , tags: { type: Array, index: true }
     , views: Number
+    , publishDate: { type: Date, index: true }
     , createDate: { type: Date, default: Date.now }
 });
 
@@ -34,7 +35,7 @@ BlogPost.virtual('commentCount').get(function() {
 });
 
 BlogPost.virtual('displayDate').get(function() {
-    return dateformat(this.createDate, 'mm-dd-yyyy hh:MM TT');
+    return dateformat(this.publishDate, 'mm-dd-yyyy hh:MM TT');
 });
 
 BlogPost.statics.findByPath = function(path, callback) {

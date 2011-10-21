@@ -23,4 +23,6 @@ module.exports = function(){
     mongoose.model('User', require('../app/models/user'));
 
     mongoose.model('MediaItem', require('../app/models/mediaItem'));
+
+    mongoose.model('Tag', require('../app/models/tag'));
 }
