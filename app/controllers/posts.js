@@ -6,12 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
-const md = require('node-markdown').Markdown;
+const md = require('node-markdown').Markdown
+    , flow = require('flow');
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 10;
 
 module.exports.index = function(req, res, next) {
     var Post = req.app.set('db').posts;
+    var Tag = req.app.set('db').tag;
+    
     var skip = req.query.page ? (req.query.page - 1) * PAGE_SIZE : 0;
     var limit = PAGE_SIZE;
 
@@ -23,22 +26,37 @@ module.exports.index = function(req, res, next) {
 
     var query = req.query.search;
 
-    Post.count(where, function(err, postCount) {
-        var pages = [];// = new Array();
-        for (var ii = 0;ii < Math.ceil(postCount / PAGE_SIZE);ii++)
-            pages.push(ii + 1);
+    var allTags;
+    var pages = [];
 
-        Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, function(err, data) {
+    flow.exec(
+        function() {
+            Post.count(where, this);
+        }, function(err, postCount) {
+            for (var ii = 0;ii < Math.ceil(postCount / PAGE_SIZE);ii++)
+                pages.push(ii + 1);
+
+            Tag.find({}, this);
+        }, function(err, data) {
+            allTags = data.map(function(p) {
+                return {
+                    name: p.name,
+                    count: p.posts.length
+                };
+            });
+            Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, this);
+        }, function(err, data) {
             res.render('post/index', {
                 layout: false,
                 posts: data,
                 fbAppId: req.app.set('fbAppId'),
                 pageCount: pages.length,
                 pages: pages,
-                currentPage: req.query.page ? req.query.page : 1
+                currentPage: req.query.page ? req.query.page : 1,
+                tags: allTags
             });
-        });
-    });
+        }
+    );
 };
 
 module.exports.search = function(req, res, next) {

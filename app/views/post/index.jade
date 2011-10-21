@@ -5,7 +5,12 @@ block scripts
     script(type="text/javascript")
         $(document).ready(function() {
             $('.pagination li:not(.disabled) a').click(function() {
-                window.location = "/?page=" + $(this).attr('pg');
+                if (window.location.search)
+                {
+                    window.location = updateQueryStringParameter(window.location.search, 'page', $(this).attr('pg'));
+                }
+                else
+                    window.location = "/?page=" + $(this).attr('pg');
             });
         });
 
@@ -39,3 +44,6 @@ block content
 
 block sidebar
     span tags
+        ul
+        - each tag in tags
+            li: a(href="/?tags=" + tag.name) #{tag.name} (#{tag.count})

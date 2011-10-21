@@ -83,3 +83,12 @@ LB.login = function(next) {
         });
     });
 };
+
+function updateQueryStringParameter(a, k, v) {
+    var re = new RegExp("([?|&])" + k + "=.*?(&|$)", "i"),
+    separator = a.indexOf('?') !== -1 ? "&" : "?";
+    if (a.match(re))
+        return a.replace(re, '$1' + k + "=" + v + '$2');
+    else
+        return a + separator + k + "=" + v;
+};
