@@ -23,11 +23,32 @@ module.exports.getPosts = function(req, res, next) {
 //View a post for editing
 module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
+    var Tag = req.app.set('db').tag;
 
     Post.findById(req.params.id, function(err, data) {
-        res.render('admin/editpost', {
-            post: data,
-            action: 'edit'
+        Tag.find({}, function(err, tags) {
+            var t = [ ];
+            for(var ii = 0;ii < data.tags.length; ii++)
+            {
+                t.push({
+                    name: data.tags[ii],
+                    selected: true
+                });
+            }
+
+            for (var ii = 0;ii < tags.length;ii++) {
+                if (!t.some(function(p) { return p.name === tags[ii].name }))
+                    t.push({
+                        name: tags[ii].name,
+                        selected: false
+                    });
+            }
+
+            res.render('admin/editpost', {
+                post: data,
+                tags: t,
+                action: 'edit'
+            });
         });
     });
 };
@@ -71,30 +92,46 @@ module.exports.addTag = function(req, res, next) {
 module.exports.addPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
     var Tag = req.app.set('db').tag;
-    
+
+    var tags = req.body.post.tags;
+
     var item = new Post();
     item.title = req.body.post.title;
     item.body = req.body.post.body;
-    item.path = '/' + item.title.replace(/ /g, "_");
-    item.tags = req.body.post.tags.filter(function(t) { return t; });
+    item.path = '/' + item.title.replace(/ /g, "_").replace(/[^0-9a-zA-Z]/g, "");
+    item.tags = tags ? tags.filter(function(t) { return t; }) : [ ];
     item.publishDate = new Date();
 
-    item.save(function(err) {
-        if (!err) {
-            Tag.addToAllTags(item.tags, item._id, function(err) {
-                console.log(err);
-                res.send({
-                    success: true,
-                    path: item.path
-                });
+    Post.count({
+        path: item.path
+    }, function(e, existingCount) {
+        if (existingCount > 0)
+        {
+            res.send({
+                success: false,
+                message: 'New post path conflicts with an existing post path, please change the title'
             });
         }
         else
         {
-            console.log(err);
-            res.send({
-                success: false,
-                error: err
+            item.save(function(err) {
+                if (!err) {
+                    Tag.addToAllTags(item.tags, item._id, function(err) {
+                        console.log(err);
+                        res.send({
+                            success: true,
+                            path: item.path
+                        });
+                    });
+                }
+                else
+                {
+                    console.log(err);
+                    res.send({
+                        success: false,
+                        message: err.message
+                    });
+                }
             });
         }
     });
@@ -108,16 +145,28 @@ module.exports.editPost = function(req, res, next) {
     Post.findById(req.params.id, function(err, data) {
         var edit = req.body.post;
 
-        data.body = edit.body;
-        data.title = edit.title;
-        data.tags = edit.tags.filter(function(t) { return t; });
+        Tag.removeFromAllTags(data._id, function(err) {
+            data.body = edit.body;
+            data.title = edit.title;
+            data.tags = edit.tags ? edit.tags.filter(function(t) { return t; }) : [ ];
 
-        data.save(function(err) {
-            Tag.addToAllTags(data.tags, data._id, function(tagErr) {
-                console.log(tagErr);
-                res.send({
-                    success: true
-                });
+            data.save(function(err) {
+                if (err)
+                {
+                    res.send({
+                        success:false,
+                        message: err.message
+                    });
+                }
+                else
+                {
+                    Tag.addToAllTags(data.tags, data._id, function(tagErr) {
+                        console.log(tagErr);
+                        res.send({
+                            success: true
+                        });
+                    });
+                }
             });
         });
     });

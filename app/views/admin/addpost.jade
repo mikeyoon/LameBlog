@@ -22,7 +22,12 @@ block content
                 var data = $(this).serialize();
                 $.post($(this).attr('action'), data)
                     .success(function(data) {
-                        window.location = '/posts' + data.path;
+                        if (data.success)
+                            window.location = '/posts' + data.path;
+                        else
+                        {
+                            $('.err').html('<div class="alert-message error">' + data.message + '</div>')
+                        }
                     });
             });
 
@@ -44,14 +49,15 @@ block content
             });
         });
 
-    hr
+    p.err
+
     form(method="POST", action="/admin/posts/add", class="form-stacked")
         fieldset
             legend Create a Post
             div.clearfix
                 label(for="post-title") Title:
                 div.input
-                    input#post-title(type="text", name="post[title]")
+                    input.span12#post-title(type="text", name="post[title]")
             div.clearfix
                 label(for="postbody") Body:
                 div.input
@@ -59,7 +65,7 @@ block content
             div.clearfix
                 label(for="post-tags") Tags:
                 div.input
-                    select#post-tags(name="post[tags]", multiple="multiple")
+                    select.span6#post-tags(name="post[tags]", multiple="multiple")
                         - each tag in tags
                             option!=tag.name
             div.clearfix

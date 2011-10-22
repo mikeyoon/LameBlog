@@ -37,7 +37,7 @@ module.exports.add = function(req, res, next) {
                     function() {
                         im.resize({
                             srcPath: fi.path,
-                            dstPath: fi.path + ".inline",
+                            dstPath: fi.path + ".inline.jpg",
                             width: 400
                         }, this);
                     }, function(err, stdout, stderr) {

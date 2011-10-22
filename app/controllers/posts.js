@@ -36,14 +36,17 @@ module.exports.index = function(req, res, next) {
             for (var ii = 0;ii < Math.ceil(postCount / PAGE_SIZE);ii++)
                 pages.push(ii + 1);
 
-            Tag.find({}, this);
+            Tag.find({  }, this);
         }, function(err, data) {
             allTags = data.map(function(p) {
                 return {
                     name: p.name,
                     count: p.posts.length
                 };
+            }).filter(function(p) {
+                return p.count;
             });
+
             Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, this);
         }, function(err, data) {
             res.render('post/index', {
