@@ -7,7 +7,7 @@
  */
 
 const md = require('node-markdown').Markdown
-    , flow = require('flow');
+    , Flow = require('nestableflow');
 
 const PAGE_SIZE = 10;
 
@@ -20,7 +20,6 @@ module.exports.index = function(req, res, next) {
 
     var where = { };
 
-    console.log(req.query.tags);
     if (req.query.tags)
         where.tags = req.query.tags;
 
@@ -29,15 +28,17 @@ module.exports.index = function(req, res, next) {
     var allTags;
     var pages = [];
 
-    flow.exec(
-        function() {
-            Post.count(where, this);
-        }, function(err, postCount) {
-            for (var ii = 0;ii < Math.ceil(postCount / PAGE_SIZE);ii++)
+    var root = Flow.serial(
+        function(flow) {
+            Post.count(where, flow.next);
+        },
+        function(flow, count) {
+            for (var ii = 0;ii < Math.ceil(count / PAGE_SIZE);ii++)
                 pages.push(ii + 1);
 
-            Tag.find({  }, this);
-        }, function(err, data) {
+            Tag.find({  }, flow.next);
+        },
+        function(flow, data) {
             allTags = data.map(function(p) {
                 return {
                     name: p.name,
@@ -47,8 +48,9 @@ module.exports.index = function(req, res, next) {
                 return p.count;
             });
 
-            Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, this);
-        }, function(err, data) {
+            Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, flow.next);
+        },
+        function(flow, data) {
             res.render('post/index', {
                 layout: false,
                 posts: data,
@@ -60,6 +62,12 @@ module.exports.index = function(req, res, next) {
             });
         }
     );
+
+    root.onError = function(err) {
+        console.log('error', err);
+    };
+
+    root.start();
 };
 
 module.exports.search = function(req, res, next) {
@@ -69,33 +77,48 @@ module.exports.search = function(req, res, next) {
 module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
 
-    //Get posts with same tags
-    Post.findByPath(req.params.id, function(err, data) {
-        if (data)
-        {
-            Post.find({ _id: { $ne: data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, function(err3, recent) {
-                Post.find({ tags: { $in : data.tags }, _id: { $ne : data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, function(err2, tagged) {
-                    res.render('post/view', {
-                        layout: false,
-                        post: data,
-                        recent: recent,
-                        related: tagged,
-                        fbData: {
-                            fbAppId: req.app.set('fbAppId'),
-                            ogTitle: req.app.set('site_name') + ' - ' + data.title,
-                            ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
-                            ogSiteName: req.app.set('sitename'),
-                            ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
-                            ogDescription: ''
-                        }
-                    });
-                });
+    var self = {};
+    var root = Flow.serial(
+        function(flow) {
+            Post.findByPath(req.params.id, flow.next);
+        },
+        function(flow, data) {
+            if (data)
+            {
+                self.data = data;
+                Post.find({ _id: { $ne: self.data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
+            }
+            else {
+                res.redirect('/');
+            }
+        },
+        function(flow, recent) {
+            self.recent = recent;
+            Post.find({ tags: { $in : self.data.tags }, _id: { $ne : self.data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
+        },
+        function(flow, tagged) {
+            res.render('post/view', {
+                layout: false,
+                post: self.data,
+                recent: self.recent,
+                related: tagged,
+                fbData: {
+                    fbAppId: req.app.set('fbAppId'),
+                    ogTitle: req.app.set('site_name') + ' - ' + self.data.title,
+                    ogUrl: 'http://' + req.app.set('domain') + '/posts' + self.data.path,
+                    ogSiteName: req.app.set('sitename'),
+                    ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
+                    ogDescription: ''
+                }
             });
         }
-        else {
-            res.redirect('/');
-        }
-    });
+    );
+
+    root.onError = function(err) {
+        console.log('error', err);
+    };
+
+    root.start();
 };
 
 module.exports.renderMarkdown = function(req, res, next) {

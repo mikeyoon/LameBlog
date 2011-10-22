@@ -6,6 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
+const Flow = require('nestableflow');
+
 //Display a list of options
 module.exports.index = function(req, res, next) {
     res.render('admin/index');
