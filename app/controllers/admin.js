@@ -98,7 +98,7 @@ module.exports.addPost = function(req, res, next) {
     var item = new Post();
     item.title = req.body.post.title;
     item.body = req.body.post.body;
-    item.path = '/' + item.title.replace(/ /g, "_").replace(/[^0-9a-zA-Z]/g, "");
+    item.path = '/' + item.title.replace(/ /g, "_").replace(/[^_0-9a-zA-Z]/g, "");
     item.tags = tags ? tags.filter(function(t) { return t; }) : [ ];
     item.publishDate = new Date();
 
