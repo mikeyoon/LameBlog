@@ -9,12 +9,15 @@
 const knox = require('knox'),
     im = require('imagemagick'),
     flow = require('flow'),
-    PAGE_SIZE = 4;
+    PAGE_SIZE = 4,
+    BUCKET = 'lameblog1';
+
+const BUCKET_PATH = '/images/';
 
 var client = knox.createClient({
     key: process.env.S3_KEY
     , secret: process.env.S3_SECRET
-    , bucket: 'lameblog'
+    , bucket: BUCKET
 });
 
 module.exports.add = function(req, res, next) {
@@ -27,7 +30,6 @@ module.exports.add = function(req, res, next) {
             var ename = fi.name.replace(/ /g, '_');
             var thumb = 'thumb-' + ename;
             var inline = 'inline-' + ename
-
 
             if (fi.mime.indexOf('image') != -1)
             {
@@ -45,14 +47,14 @@ module.exports.add = function(req, res, next) {
                             width: 128
                         }, this);
                     }, function(err, stdout, stderr) {
-                        client.putFile(fi.path + ".thumb", thumb, this);
+                        client.putFile(fi.path + ".thumb", BUCKET_PATH + thumb, this);
                     }, function(err, s3res) {
                         if (err) {
                             console.log(err);
                             res.send({ error: err });
                         }
                         else {
-                            client.putFile(fi.path + '.inline', inline, this);
+                            client.putFile(fi.path + '.inline', BUCKET_PATH + inline, this);
                         }
                     }, function(err, s3res) {
                         if (err) {
@@ -60,7 +62,7 @@ module.exports.add = function(req, res, next) {
                             res.send({ error: err });
                         }
                         else {
-                            client.putFile(fi.path, ename, this);
+                            client.putFile(fi.path, BUCKET_PATH + ename, this);
                         }
                     }, function(err, s3res) {
                         if (err) {
@@ -70,9 +72,9 @@ module.exports.add = function(req, res, next) {
                             var item = new Media();
                             item.filename = ename;
                             item.filetype = 'text';
-                            item.url = 'http://lameblog.s3.amazonaws.com/' + ename;
-                            item.thumburl = 'http://lameblog.s3.amazonaws.com/' + thumb;
-                            item.inlineurl = 'http://lameblog.s3.amazonaws.com/' + inline;
+                            item.url = 'http://' + BUCKET + '.s3.amazonaws.com' + BUCKET_PATH + ename;
+                            item.thumburl = 'http://' + BUCKET + '.s3.amazonaws.com' + BUCKET_PATH + thumb;
+                            item.inlineurl = 'http://' + BUCKET + '.s3.amazonaws.com' + BUCKET_PATH + inline;
                             item.thumbname = thumb;
                             item.inlinename = inline;
                             item.size = fi.size;
@@ -108,17 +110,17 @@ module.exports.delete = function(req, res, next) {
 
             flow.exec(
                 function() { //Delete full size file
-                    client.deleteFile('/' + data.filename, this);
+                    client.deleteFile(BUCKET_PATH + data.filename, this);
                 }, function(err, s3res) { //Delete thumbnail
                     if (data.thumbname)
                     {
-                        client.deleteFile('/' + data.thumbname, this);
+                        client.deleteFile(BUCKET_PATH + data.thumbname, this);
                     }
                     else
                         res.send({ success: true });
                 }, function(err, s3res) { //Delete inline file
                     if (data.inlinename) {
-                        client.deleteFile('/' + data.inlinename, this);
+                        client.deleteFile(BUCKET_PATH + data.inlinename, this);
                     } else
                         res.send({ success: true });
                 }, function(err, s3res) { //Finish
