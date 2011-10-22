@@ -52,3 +52,13 @@ h2.title a {
 .undecorated, a.undecorated:hover {
     text-decoration: none;
 }
+
+.leftspace
+{
+    margin-left: 5px;
+}
+
+.topgap
+{
+    margin-top: 24px;
+}

@@ -45,10 +45,10 @@ block content
 
         p!=post.htmlbody
 
-        //if (post.tags.length > 0)
-        //    p Tagged Under:
-        //        - each tag in post.tags
-        //            !=tag
+        if (post.tags.length > 0)
+            p.topgap: small filed under:
+                - each tag in post.tags
+                    a(href="/?" + tag): span.label.leftspace!=tag
 
 
         footer
@@ -78,8 +78,11 @@ block content
             a#comment-link(class="btn small primary pull-right", href="javascript: //comment", post-id="#{post._id}") Add Comment
         
 block sidebar
-    div Tags
+    div Recent Posts
         ul
-          - each tag in post.tags
-            li
-                a(href="/?tags=#{tag}")!=tag
+          - each post in recent
+            li: a(href='/posts' + post.path)!=post.title
+    div Related Posts
+        ul
+          - each post in related
+            li: a(href='/posts' + post.path)!=post.title

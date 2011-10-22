@@ -68,21 +68,28 @@ module.exports.search = function(req, res, next) {
 
 module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
-    
+
+    //Get posts with same tags
     Post.findByPath(req.params.id, function(err, data) {
         if (data)
         {
-            res.render('post/view', {
-                layout: false,
-                post: data,
-                fbData: {
-                    fbAppId: req.app.set('fbAppId'),
-                    ogTitle: req.app.set('site_name') + ' - ' + data.title,
-                    ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
-                    ogSiteName: req.app.set('sitename'),
-                    ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
-                    ogDescription: ''
-                }
+            Post.find({ _id: { $ne: data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, function(err3, recent) {
+                Post.find({ tags: { $in : data.tags }, _id: { $ne : data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, function(err2, tagged) {
+                    res.render('post/view', {
+                        layout: false,
+                        post: data,
+                        recent: recent,
+                        related: tagged,
+                        fbData: {
+                            fbAppId: req.app.set('fbAppId'),
+                            ogTitle: req.app.set('site_name') + ' - ' + data.title,
+                            ogUrl: 'http://' + req.app.set('domain') + '/posts' + data.path,
+                            ogSiteName: req.app.set('sitename'),
+                            ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
+                            ogDescription: ''
+                        }
+                    });
+                });
             });
         }
         else {
