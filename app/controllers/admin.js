@@ -178,9 +178,9 @@ module.exports.deletePost = function(req, res, next) {
     var Tag = req.app.set('db').tag;
 
     Post.findById(req.params.id, function(err, data) {
-        data.remove(function(err) {
-            Tag.removeFromAllTags(data._id, function(err) {
-                console.log(err);
+        Tag.removeFromAllTags(data._id, function(err2) {
+            console.log(err2);
+            data.remove(function(err3) {
                 res.send({
                     success: true
                 });

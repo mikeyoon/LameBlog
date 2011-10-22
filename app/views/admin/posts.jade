@@ -4,14 +4,17 @@ block content
     script(type="text/javascript")
         $(document).ready(function() {
             $('.delete-post').click(function() {
-                var id = $(this).attr('post-id');
-                $.post('/admin/posts/delete/' + id)
-                    .success(function(data) {
-                        if (data.success)
-                        {
-                            $('#post-' + id).remove();
-                        }
-                    });
+                if (confirm('Are you sure you want to delete this post?'))
+                {
+                    var id = $(this).attr('post-id');
+                    $.post('/admin/posts/delete/' + id)
+                        .success(function(data) {
+                            if (data.success)
+                            {
+                                $('#post-' + id).remove();
+                            }
+                        });
+                }
             });
         });
 
