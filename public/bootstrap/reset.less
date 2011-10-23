@@ -12,12 +12,8 @@ table { border-collapse: collapse; border-spacing: 0; }
 ol, ul { list-style: none; }
 q:before, q:after, blockquote:before, blockquote:after { content: ""; }
 
-body {
-    padding: @bodyTopPadding @bodySidePadding @bodyBottomPadding;
-}
-
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-    body {
+    .container {
         width: 712px;
         padding: @retinaBodyTopPadding @retinaBodySidePadding @retinaBodyBottomPadding;
     }
@@ -27,12 +23,10 @@ body {
 	only screen and (-webkit-min-device-pixel-ratio: 2),
 	only screen and (min-device-pixel-ratio: 2) {
 
-	body {
-	    padding: @retinaBodyTopPadding @retinaBodySidePadding @retinaBodyBottomPadding;
-	    width: 712px;
+	.container {
+	    .fixed-container(@retinaSiteWidth);
 	}
 }
-
 
 // Normalize.css
 // Pulling in select resets form the normalize.css project
