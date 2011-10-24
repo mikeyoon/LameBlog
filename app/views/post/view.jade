@@ -52,7 +52,7 @@ block content
 
 
         footer
-            div.fb-like(data-send="true", data-width="450", data-href=fbData.ogUrl, data-show-faces="false")
+            div.fb-like(data-send="true", data-width="450", data-layout="button_count", data-href=fbData.ogUrl, data-show-faces="false")
     div.comments
         h4#comment-list Comments
         - each comment in post.comments
@@ -66,7 +66,7 @@ block content
                 div.comment-body!=comment.message
     div.padded-bottom
         span(class="login hide")
-            div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="1", onlogin="LB.setupCommenting()") Login to comment
+            div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="2", onlogin="LB.setupCommenting()") Login to comment
         span(class="add-comment hide")
             h5.small Leave a Comment
             p Logged in as

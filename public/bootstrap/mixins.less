@@ -73,10 +73,15 @@
 
 // Grid System
 .fixed-container(@width: @siteWidth) {
-  width: @siteWidth;
+  width: @width;
   margin-left: auto;
   margin-right: auto;
   .clearfix();
+}
+.ret-container(@width: @retinaSiteWidth) {
+    width: @width;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 .columns(@columnSpan: 1) {
   width: (@gridColumnWidth * @columnSpan) + (@gridGutterWidth * (@columnSpan - 1));
