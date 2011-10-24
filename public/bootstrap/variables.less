@@ -39,7 +39,7 @@
 
 // Griditude
 // Modify the grid styles in mixins.less
-@gridColumns:       16;
+@gridColumns:       14;
 @gridColumnWidth:   40px;
 @gridGutterWidth:   20px;
 @extraSpace:        (@gridGutterWidth * 2); // For our grid calculations
@@ -47,7 +47,7 @@
 
 @retinaGridColumnWidth:    20px;
 @retinaGridGutterWidth:    9px;
-@retinaSiteWidth:          (@gridColumns * @retinaGridColumnWidth) + (@retinaGridGutterWidth * (@gridColumns - 1));
+@retinaSiteWidth:          (@gridColumns * @retinaGridColumnWidth) + (@retinaGridGutterWidth * (@gridColumns - 1)) + 20px;
 
 // Color Scheme
 // Use this to roll your own color schemes if you like (unused by Bootstrap by default)
