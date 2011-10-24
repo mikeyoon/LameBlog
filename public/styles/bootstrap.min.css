@@ -1132,6 +1132,105 @@ textarea[readonly] {
   margin-left: -20px;
   padding-left: 20px;
 }
+@media only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+  input.span1, textarea.span1, select.span1 {
+    display: inline-block;
+    float: none;
+    width: 10px;
+    margin-left: 0;
+  }
+  input.span2, textarea.span2, select.span2 {
+    display: inline-block;
+    float: none;
+    width: 39px;
+    margin-left: 0;
+  }
+  input.span3, textarea.span3, select.span3 {
+    display: inline-block;
+    float: none;
+    width: 68px;
+    margin-left: 0;
+  }
+  input.span4, textarea.span4, select.span4 {
+    display: inline-block;
+    float: none;
+    width: 97px;
+    margin-left: 0;
+  }
+  input.span5, textarea.span5, select.span5 {
+    display: inline-block;
+    float: none;
+    width: 126px;
+    margin-left: 0;
+  }
+  input.span6, textarea.span6, select.span6 {
+    display: inline-block;
+    float: none;
+    width: 155px;
+    margin-left: 0;
+  }
+  input.span7, textarea.span7, select.span7 {
+    display: inline-block;
+    float: none;
+    width: 184px;
+    margin-left: 0;
+  }
+  input.span8, textarea.span8, select.span8 {
+    display: inline-block;
+    float: none;
+    width: 213px;
+    margin-left: 0;
+  }
+  input.span9, textarea.span9, select.span9 {
+    display: inline-block;
+    float: none;
+    width: 242px;
+    margin-left: 0;
+  }
+  input.span10, textarea.span10, select.span10 {
+    display: inline-block;
+    float: none;
+    width: 271px;
+    margin-left: 0;
+  }
+  input.span11, textarea.span11, select.span11 {
+    display: inline-block;
+    float: none;
+    width: 300px;
+    margin-left: 0;
+  }
+  input.span12, textarea.span12, select.span12 {
+    display: inline-block;
+    float: none;
+    width: 329px;
+    margin-left: 0;
+  }
+  input.span13, textarea.span13, select.span13 {
+    display: inline-block;
+    float: none;
+    width: 358px;
+    margin-left: 0;
+  }
+  input.span14, textarea.span14, select.span14 {
+    display: inline-block;
+    float: none;
+    width: 387px;
+    margin-left: 0;
+  }
+  input.span15, textarea.span15, select.span15 {
+    display: inline-block;
+    float: none;
+    width: 416px;
+    margin-left: 0;
+  }
+  input.span16, textarea.span16, select.span16 {
+    display: inline-block;
+    float: none;
+    width: 445px;
+    margin-left: 0;
+  }
+}
 /*
  * Tables.less
  * Tables for, you guessed it, tabular data

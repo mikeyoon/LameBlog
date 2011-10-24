@@ -463,3 +463,39 @@ textarea[readonly] {
     padding-left: 20px;
   }
 }
+
+@media
+	only screen and (-webkit-min-device-pixel-ratio: 2),
+	only screen and (min-device-pixel-ratio: 2) {
+
+// Grid style input sizes
+// This is a duplication of the main grid .columns() mixin, but subtracts 10px to account for input padding and border
+.retFormColumns(@columnSpan: 1) {
+  display: inline-block;
+  float: none;
+  width: ((@retinaGridColumnWidth) * @columnSpan) + (@retinaGridGutterWidth * (@columnSpan - 1)) - 10;
+  margin-left: 0;
+}
+input,
+textarea,
+select {
+  // Default columns
+  &.span1     { .retFormColumns(1); }
+  &.span2     { .retFormColumns(2); }
+  &.span3     { .retFormColumns(3); }
+  &.span4     { .retFormColumns(4); }
+  &.span5     { .retFormColumns(5); }
+  &.span6     { .retFormColumns(6); }
+  &.span7     { .retFormColumns(7); }
+  &.span8     { .retFormColumns(8); }
+  &.span9     { .retFormColumns(9); }
+  &.span10    { .retFormColumns(10); }
+  &.span11    { .retFormColumns(11); }
+  &.span12    { .retFormColumns(12); }
+  &.span13    { .retFormColumns(13); }
+  &.span14    { .retFormColumns(14); }
+  &.span15    { .retFormColumns(15); }
+  &.span16    { .retFormColumns(16); }
+}
+
+}
