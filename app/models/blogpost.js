@@ -38,7 +38,7 @@ BlogPost.virtual('commentCount').get(function() {
 BlogPost.virtual('displayDate').get(function() {
     var ex = time.extend(this.publishDate);
     ex.setTimezone('America/Los_Angeles');
-    return dateformat(ex, 'mm-dd-yyyy hh:MM TT');
+    return dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
 });
 
 BlogPost.statics.findByPath = function(path, callback) {
