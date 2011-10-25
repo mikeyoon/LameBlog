@@ -15,7 +15,7 @@
         "type" : "none"
     },
     "bugs" : {
-        "web" : "null"
+        "web" : "https://github.com/mikeyoon/LameBlog/issues"
     },
     "dependencies" : {
         "express" : "2.4.7",
@@ -29,6 +29,7 @@
         "dateformat" : "1.0.1-1.2.3",
         "facebook-client" : "1.3.0",
         "nestableflow" : "0.0.14",
-        "connect-redis" : "1.1.0"
+        "connect-redis" : "1.1.0",
+        "time": "0.6.4"
     }
 }

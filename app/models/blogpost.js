@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
-const dateformat = require("dateformat");
+const dateformat = require("dateformat")
+    , time = require('time');
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -35,7 +36,9 @@ BlogPost.virtual('commentCount').get(function() {
 });
 
 BlogPost.virtual('displayDate').get(function() {
-    return dateformat(this.publishDate, 'mm-dd-yyyy hh:MM TT');
+    var ex = time.extend(this.publishDate);
+    ex.setTimezone('America/Los_Angeles');
+    return dateformat(ex, 'mm-dd-yyyy hh:MM TT');
 });
 
 BlogPost.statics.findByPath = function(path, callback) {
