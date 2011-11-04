@@ -17,7 +17,7 @@ module.exports.index = function(req, res, next) {
 module.exports.getPosts = function(req, res, next) {
     var Post = req.app.set('db').posts;
 
-    Post.find({}, function(err, data) {
+    Post.find({}, [], { sort: [ [ 'publishDate', 'descending' ] ] }, function(err, data) {
         res.render('admin/posts', { posts: data });
     });
 };
