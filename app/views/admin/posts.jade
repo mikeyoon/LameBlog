@@ -18,16 +18,21 @@ block content
             });
         });
 
-
-    - each post in posts
-        div(id='post-' + post._id)
-            div!=post.title
-                |
-                a(href='/posts' + post.path) View
-                |
-                a(href='/admin/posts/' + post._id) Edit
-                |
-                a.delete-post(href='javascript: //Delete', post-id=post._id) Delete
-            div Posted: #{post.displayDate}, Comments: #{post.commentCount}
-            hr
+    table.zebra-striped.bordered-table
+        thead
+            tr
+                th Title
+                th Publish Date
+                th Comments
+                th
+        tbody
+        - each post in posts
+            tr(id='post-' + post._id)
+                td!=post.title
+                td!=post.displayDate
+                td!=post.commentCount
+                td
+                    a.btn.small(href='/posts' + post.path) View
+                    a.btn.small.leftspace(href='/admin/posts/' + post._id) Edit
+                    a.btn.small.leftspace.danger.delete-post(href='javascript: //Delete', post-id=post._id) Delete
     a.btn.primary(href="/admin") Back
