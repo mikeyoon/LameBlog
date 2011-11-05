@@ -24,6 +24,7 @@ block content
                 th Title
                 th Publish Date
                 th Comments
+                th Hidden
                 th
         tbody
         - each post in posts
@@ -31,6 +32,7 @@ block content
                 td!=post.title
                 td!=post.displayDate
                 td!=post.commentCount
+                td!=post.hidden
                 td
                     a.btn.small(href='/posts' + post.path) View
                     a.btn.small.leftspace(href='/admin/posts/' + post._id) Edit

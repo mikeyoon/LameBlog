@@ -63,6 +63,12 @@ block content
                 div.input
                     textarea#postbody(name="post[body]")
             div.clearfix
+                label(for="post-date") Publish Date:
+                div.input
+                    input#post-date(type="text", name="post[publishDate]", value=currentDate)
+                    span.leftspace Hidden
+                    input.leftspace(type="checkbox", name="post[hidden]")
+            div.clearfix
                 label(for="post-tags") Tags:
                 div.input
                     select.span6#post-tags(name="post[tags]", multiple="multiple")

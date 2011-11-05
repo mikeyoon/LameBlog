@@ -18,7 +18,7 @@ module.exports.index = function(req, res, next) {
     var skip = req.query.page ? (req.query.page - 1) * PAGE_SIZE : 0;
     var limit = PAGE_SIZE;
 
-    var where = { };
+    var where = { hidden: false };
 
     if (req.query.tags)
         where.tags = req.query.tags;
@@ -94,7 +94,7 @@ module.exports.getPost = function(req, res, next) {
         },
         function(flow, recent) {
             self.recent = recent;
-            Post.find({ tags: { $in : self.data.tags }, _id: { $ne : self.data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
+            Post.find({ hidden: false, tags: { $in : self.data.tags }, _id: { $ne : self.data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
         },
         function(flow, tagged) {
             res.render('post/view', {
@@ -109,7 +109,8 @@ module.exports.getPost = function(req, res, next) {
                     ogSiteName: req.app.set('sitename'),
                     ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
                     ogDescription: ''
-                }
+                },
+                pageTitle: self.data.title
             });
         }
     );

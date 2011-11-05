@@ -25,6 +25,9 @@ module.exports = function(app) {
     const db = mongoose.createConnection(dblink);
 
     //  Configure expressjs
+    app.configure(function() {
+        app.set('site_name', 'Mike\'s Musings');
+    });
 
     app.configure(function () {
         this
@@ -41,7 +44,8 @@ module.exports = function(app) {
             .set('views', __dirname + '/../app/views')
             .set('view engine', 'jade')
             .set('view options', {
-                layout: false
+                layout: false,
+                pageTitle: this.set('site_name')
             })
             .use('/public', express.static(__dirname + '/../public'));
     });
@@ -78,10 +82,6 @@ module.exports = function(app) {
 
     app.configure(function() {
         app.set('media', storage);
-    });
-
-    app.configure(function() {
-        app.set('site_name', 'Mike\'s Musings');
     });
 
     return app;

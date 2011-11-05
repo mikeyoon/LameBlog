@@ -6,7 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-const Flow = require('nestableflow');
+const Flow = require('nestableflow')
+    , dateformat = require("dateformat")
+    , time = require('time');
 
 //Display a list of options
 module.exports.index = function(req, res, next) {
@@ -57,9 +59,13 @@ module.exports.getPost = function(req, res, next) {
 
 module.exports.newPost = function(req, res, next) {
     var Tag = req.app.set('db').tag;
-    
+
+    var ex = time.extend(new Date());
+    ex.setTimezone('America/Los_Angeles');
+    var date = dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
+
     Tag.find({}, function(err, data) {
-        res.render('admin/addpost', { tags: data });
+        res.render('admin/addpost', { tags: data, currentDate: date });
     });
 };
 
@@ -102,7 +108,8 @@ module.exports.addPost = function(req, res, next) {
     item.body = req.body.post.body;
     item.path = '/' + item.title.replace(/ /g, "_").replace(/[^_0-9a-zA-Z]/g, "");
     item.tags = tags ? tags.filter(function(t) { return t; }) : [ ];
-    item.publishDate = new Date();
+    item.publishDate = new Date(Date.parse(req.body.post.publishDate));
+    item.hidden = req.body.post.hidden || false;
 
     Post.count({
         path: item.path
@@ -151,6 +158,8 @@ module.exports.editPost = function(req, res, next) {
             data.body = edit.body;
             data.title = edit.title;
             data.tags = edit.tags ? edit.tags.filter(function(t) { return t; }) : [ ];
+            data.hidden = edit.hidden || false;
+            data.publishDate = new Date(Date.parse(edit.publishDate));
 
             data.save(function(err) {
                 if (err)

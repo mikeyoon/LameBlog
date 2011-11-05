@@ -24,6 +24,7 @@ var BlogPost = module.exports = new Schema({
     , tags: { type: Array, index: true }
     , views: Number
     , publishDate: { type: Date, index: true }
+    , hidden: Boolean
     , createDate: { type: Date, default: Date.now }
 });
 
