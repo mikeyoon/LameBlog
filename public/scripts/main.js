@@ -54,7 +54,7 @@ LB.setupCommenting = function(next) {
                     'comment[message]': $('#comment-message').val()
                 }).success(function(response) {
                     FB.getLoginStatus(function(loginResponse) {
-                        $.post('https://graph.facebook.com/me/lameblog_dev:comment', {
+                        $.post('https://graph.facebook.com/me/lameblog:comment', {
                             access_token: loginResponse.session.access_token,
                             article: window.location.href
                         });
