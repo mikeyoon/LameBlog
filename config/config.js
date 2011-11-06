@@ -10,13 +10,22 @@
     , mongoose = require('mongoose')
     , storage = require('../lib/storage')(process.env.STORAGE_PLATFORM || 'localfilestorage')
     , form = require('connect-form')
-    , FacebookClient = require('facebook-client').FacebookClient;
+    , FacebookClient = require('facebook-client').FacebookClient
+    , argv = require('optimist').argv
+    , params = require(argv._[0])
+    , knox = require('knox');
 
 /**
  *  Exports
  */
 
 module.exports = function(app) {
+
+    var client = knox.createClient({
+        key: params.s3Key
+        , secret: params.s3Secret
+        , bucket: params.s3Bucket
+    });
 
     //  Setup DB Connection
 
@@ -26,7 +35,7 @@ module.exports = function(app) {
 
     //  Configure expressjs
     app.configure(function() {
-        app.set('site_name', 'Mike\'s Musings');
+        app.set('params', params);
     });
 
     app.configure(function () {
@@ -45,7 +54,8 @@ module.exports = function(app) {
             .set('view engine', 'jade')
             .set('view options', {
                 layout: false,
-                pageTitle: this.set('site_name')
+                pageTitle: params.site_title,
+                siteAuthor: params.author
             })
             .use('/public', express.static(__dirname + '/../public'));
     });
@@ -62,20 +72,21 @@ module.exports = function(app) {
             , 'comments': db.model('Comment')
         });
 
-        app.set('fbAppId', process.env.FACEBOOK_APP_ID);
-
-        app.set('sitename', 'LameBlog');
+        app.set('fbAppId', params.facebookAppId);
+        app.set('sitename', params.site_title);
 
         app.set('version', '1.0.0');
     });
 
     app.configure(function() {
         var fbClient = new FacebookClient(
-            process.env.FACEBOOK_APP_ID,
-            process.env.FACEBOOK_APP_SECRET
+            params.facebookAppId,
+            params.facebookSecret
         );
 
         app.set('fbClient', fbClient);
+
+        app.set('s3', client);
     });
 
     //  Configure File Storage

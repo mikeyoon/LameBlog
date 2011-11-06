@@ -6,22 +6,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
-const knox = require('knox'),
-    im = require('imagemagick'),
+const im = require('imagemagick'),
     flow = require('flow'),
-    PAGE_SIZE = 4,
-    BUCKET = 'lameblog1';
+    PAGE_SIZE = 4;
 
 const BUCKET_PATH = '/images/';
 
-var client = knox.createClient({
-    key: process.env.S3_KEY
-    , secret: process.env.S3_SECRET
-    , bucket: BUCKET
-});
-
 module.exports.add = function(req, res, next) {
-
+    var client = req.app.set('s3');
+    
     if (req.form) {
         req.form.complete(function(err, fields, files) {
             var fi = files['files[]'];
@@ -103,6 +96,7 @@ module.exports.add = function(req, res, next) {
 
 module.exports.delete = function(req, res, next) {
     var Media = req.app.set('db').media;
+    var client = req.app.set('s3');
 
     Media.findById(req.params.id, function(err, data) {
         if (data) {

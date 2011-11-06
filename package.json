@@ -30,6 +30,7 @@
         "facebook-client" : "1.3.0",
         "nestableflow" : "0.0.14",
         "connect-redis" : "1.1.0",
-        "time": "0.6.4"
+        "time": "0.6.4",
+        "optimist": "0.2.8"
     }
 }

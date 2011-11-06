@@ -27,7 +27,7 @@ html
             block body
                 div.row
                     div.span11
-                        h2.title: a.undecorated(href="/") Mike's Musings
+                        h2.title: a.undecorated(href="/")!=pageTitle
                         small Spreading positive vibes and optimism through efficient use of sarcasm and lowered expectations
                     div.span3
                 div.row
@@ -42,5 +42,5 @@ html
                         block sidebar
                 div.row.footer
                     div.span11
-                        small &copy; 2011 Michael Yoon, Powered by&nbsp;
+                        small &copy; 2011 #{siteAuthor}, Powered by&nbsp;
                             a(href="http://github.com/mikeyoon/LameBlog") Lame Blog
