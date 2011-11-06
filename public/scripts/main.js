@@ -32,6 +32,7 @@ LB.init = function(fbAppId, next) {
 LB.setupCommenting = function(next) {
     FB.api('/me', function(user) {
         console.log(user);
+        
         if (user != null && !user.error)
         {
             $('.login').removeClass('hide').addClass('hide');
@@ -52,6 +53,13 @@ LB.setupCommenting = function(next) {
                     'comment[name]': user.name,
                     'comment[message]': $('#comment-message').val()
                 }).success(function(response) {
+                    FB.getLoginStatus(function(loginResponse) {
+                        $.post('https://graph.facebook.com/me/lameblog_dev:comment', {
+                            access_token: loginResponse.session.access_token,
+                            article: window.location.href
+                        });
+                    });
+
                     $('#commentTemplate').tmpl(response).appendTo('.comments');
                     $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
                 });
@@ -73,7 +81,6 @@ LB.setupCommenting = function(next) {
 LB.login = function(next) {
     $('#login-button').click(function() {
         FB.login(function(response) {
-            console.log(response);
             if (response.status == "connected") {
                 if (next)
                     next();
