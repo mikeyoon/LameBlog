@@ -19,7 +19,7 @@ module.exports = function(app){
     this
       .set('version','1.0.0')
       .set('host', 'localhost')
-      .set('domain', params.site_url + (port != 80 ? ':' + port : ''))
+      .set('domain', params.site_url)
       .set('port', port)
       .set('env','local')
       .use(express.session({ secret: 'secret key'}));
