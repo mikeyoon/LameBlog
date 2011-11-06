@@ -13,12 +13,13 @@ const express = require('express')
 module.exports = function(app){
 
   var port = process.env.PORT || 3000;
+  var params = app.set('params');
 
   app.configure('local', function (){
     this
       .set('version','1.0.0')
       .set('host', 'localhost')
-      .set('domain', process.env.SITE_URL + (port != 80 ? ':' + port : ''))
+      .set('domain', params.site_url + (port != 80 ? ':' + port : ''))
       .set('port', port)
       .set('env','local')
       .use(express.session({ secret: 'secret key'}));
@@ -27,8 +28,8 @@ module.exports = function(app){
   app.configure('production', function (){
     this
       .set('version','1.0.0')
-      .set('host', process.env.SITE_URL)
-      .set('domain', process.env.SITE_URL + (port != 80 ? ':' + port : ''))
+      .set('host', params.site_url)
+      .set('domain', params.site_url + (port != 80 ? ':' + port : ''))
       .set('port', port)
       .set('env','production')
       .use(express.session({ store: new RedisStore, secret: 'secret key'}));
