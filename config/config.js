@@ -54,7 +54,8 @@ module.exports = function(app) {
             .set('view engine', 'jade')
             .set('view options', {
                 layout: false,
-                pageTitle: params.site_title,
+                pageTitle: params.site_title, //Default to site name
+                siteName: params.site_title,
                 siteAuthor: params.author
             })
             .use('/public', express.static(__dirname + '/../public'));
