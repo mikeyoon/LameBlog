@@ -48,15 +48,18 @@ LB.setupCommenting = function(next) {
             $('#comment-link').click(function() {
                 if ($('#comment-message').val() == '')
                     return false;
-                
+
+                var message = $('#comment-message').val();
+
                 $.post('/comment/' + $(this).attr('post-id'), {
                     'comment[name]': user.name,
-                    'comment[message]': $('#comment-message').val()
+                    'comment[message]': message
                 }).success(function(response) {
                     FB.getLoginStatus(function(loginResponse) {
                         $.post('https://graph.facebook.com/me/lameblog:comment', {
                             access_token: loginResponse.session.access_token,
-                            article: window.location.href
+                            article: window.location.href,
+                            message: message.length > 50 ? message.substring(0, 50) + '...' : message
                         });
                     });
 
