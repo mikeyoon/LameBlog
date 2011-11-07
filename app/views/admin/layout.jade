@@ -3,8 +3,8 @@ extends ../layout
 block body
     div.row
         div.span14
-            h2.title: a.undecorated(href="/") Mike's Musings
-            small Spreading positive vibes and optimism through efficient use of sarcasm and lowered expectations
+            h2.title: a.undecorated(href="/")!=siteName
+            small!=siteTagline
     div.row
         div.span14
             hr.divider
@@ -13,5 +13,5 @@ block body
             block content
     div.row.footer
         div.span14
-            small &copy; 2011 Michael Yoon, Powered by&nbsp;
+            small &copy; 2011 #{siteAuthor}, Powered by&nbsp;
                 a(href="http://github.com/mikeyoon/LameBlog") Lame Blog
