@@ -56,7 +56,8 @@ module.exports = function(app) {
                 layout: false,
                 pageTitle: params.site_title, //Default to site name
                 siteName: params.site_title,
-                siteAuthor: params.author
+                siteAuthor: params.author,
+                siteTagline: params.site_tagline
             })
             .use('/public', express.static(__dirname + '/../public'));
     });
