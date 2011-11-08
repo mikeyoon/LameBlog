@@ -61,7 +61,7 @@ module.exports.getPost = function(req, res, next) {
 module.exports.newPost = function(req, res, next) {
     var Tag = req.app.set('db').tag;
 
-    var ex = new TZDate(this.publishDate.getTime(), 'America/Los_Angeles');
+    var ex = new TZDate(new Date().getTime(), 'America/Los_Angeles');
     var date = ex.format('m-d-Y h:i A T');
 
     Tag.find({}, function(err, data) {
