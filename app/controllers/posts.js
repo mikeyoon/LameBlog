@@ -9,7 +9,7 @@
 const md = require('node-markdown').Markdown
     , Flow = require('nestableflow');
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 5;
 
 module.exports.index = function(req, res, next) {
     var Post = req.app.set('db').posts;
