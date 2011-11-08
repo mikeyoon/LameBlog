@@ -38,12 +38,12 @@ BlogPost.virtual('commentCount').get(function() {
 });
 
 BlogPost.virtual('displayDate').get(function() {
-    var ex = new TZDate(this.publishDate.dateString, 'America/Los_Angeles');
+    var ex = new TZDate(this.publishDate.getTime(), 'America/Los_Angeles');
     return ex.format('m-d-Y h:i A T');
 });
 
 BlogPost.virtual('localTime').get(function() {
-    var ex = new TZDate(this.publishDate.dateString, 'America/Los_Angeles');
+    var ex = new TZDate(this.publishDate.getTime(), 'America/Los_Angeles');
     return ex.format('m-d-Y h:i A');
 });
 
