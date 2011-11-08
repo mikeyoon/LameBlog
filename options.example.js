@@ -16,7 +16,8 @@ module.exports = {
     s3Key: '',
     s3Secret: '',
     s3Bucket: '',
-    author: 'Your Name'
+    author: 'Your Name',
+    sessionSecret: 'My key'
 }
 
     <extensions>

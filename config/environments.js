@@ -32,6 +32,6 @@ module.exports = function(app){
       .set('domain', params.site_url)
       .set('port', port)
       .set('env','production')
-      .use(express.session({ store: new RedisStore, secret: 'secret key'}));
+      .use(express.session({ store: new RedisStore, secret: params.sessionSecret}));
   });
 }
