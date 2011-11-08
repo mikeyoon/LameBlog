@@ -14,6 +14,7 @@ const BUCKET_PATH = '/images/';
 
 module.exports.add = function(req, res, next) {
     var client = req.app.set('s3');
+    var params = req.app.set('params');
     
     if (req.form) {
         req.form.complete(function(err, fields, files) {
@@ -65,9 +66,9 @@ module.exports.add = function(req, res, next) {
                             var item = new Media();
                             item.filename = ename;
                             item.filetype = 'text';
-                            item.url = 'http://' + BUCKET + '.s3.amazonaws.com' + BUCKET_PATH + ename;
-                            item.thumburl = 'http://' + BUCKET + '.s3.amazonaws.com' + BUCKET_PATH + thumb;
-                            item.inlineurl = 'http://' + BUCKET + '.s3.amazonaws.com' + BUCKET_PATH + inline;
+                            item.url = 'http://' + params.s3Bucket + '.s3.amazonaws.com' + BUCKET_PATH + ename;
+                            item.thumburl = 'http://' + params.s3Bucket + '.s3.amazonaws.com' + BUCKET_PATH + thumb;
+                            item.inlineurl = 'http://' + params.s3Bucket + '.s3.amazonaws.com' + BUCKET_PATH + inline;
                             item.thumbname = thumb;
                             item.inlinename = inline;
                             item.size = fi.size;
