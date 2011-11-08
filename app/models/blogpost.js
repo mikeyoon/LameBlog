@@ -38,15 +38,13 @@ BlogPost.virtual('commentCount').get(function() {
 });
 
 BlogPost.virtual('displayDate').get(function() {
-    var ex = new TZDate(this.publishDate);
-    ex.setTimezone('America/Los_Angeles');
-    return dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
+    var ex = new TZDate(this.publishDate.dateString, 'America/Los_Angeles');
+    return ex.format('m-d-Y h:i A T');
 });
 
 BlogPost.virtual('localTime').get(function() {
-    var ex = new TZDate(this.publishDate);
-    ex.setTimezone('America/Los_Angeles');
-    return dateformat(ex, 'mm-dd-yyyy hh:mm TT');
+    var ex = new TZDate(this.publishDate.dateString, 'America/Los_Angeles');
+    return ex.format('m-d-Y h:i A');
 });
 
 BlogPost.statics.findByPath = function(path, callback) {
