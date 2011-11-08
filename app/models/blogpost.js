@@ -42,6 +42,12 @@ BlogPost.virtual('displayDate').get(function() {
     return dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
 });
 
+BlogPost.virtual('localTime').get(function() {
+    var ex = time.extend(this.publishDate);
+    ex.setTimezone('America/Los_Angeles');
+    return dateformat(ex, 'mm-dd-yyyy hh:mm TT');
+});
+
 BlogPost.statics.findByPath = function(path, callback) {
     this.findOne({ path: '/' + path }, callback);
 };

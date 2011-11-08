@@ -21,7 +21,7 @@ block content
     table.zebra-striped.bordered-table
         thead
             tr
-                th Title
+                th(style="width: 250px") Title
                 th Publish Date
                 th Comments
                 th Hidden
@@ -30,9 +30,9 @@ block content
         - each post in posts
             tr(id='post-' + post._id)
                 td!=post.title
-                td!=post.displayDate
+                td!=post.localTime
                 td!=post.commentCount
-                td!=post.hidden
+                td: input(type="checkbox", disabled="true", checked=post.hidden)
                 td
                     a.btn.small(href='/posts' + post.path) View
                     a.btn.small.leftspace(href='/admin/posts/' + post._id) Edit
