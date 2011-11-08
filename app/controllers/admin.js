@@ -61,9 +61,8 @@ module.exports.getPost = function(req, res, next) {
 module.exports.newPost = function(req, res, next) {
     var Tag = req.app.set('db').tag;
 
-    var ex = new TZDate(this.publishDate);
-    ex.setTimezone('America/Los_Angeles');
-    var date = dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
+    var ex = new TZDate(this.publishDate.getTime(), 'America/Los_Angeles');
+    var date = ex.format('m-d-Y h:i A T');
 
     Tag.find({}, function(err, data) {
         res.render('admin/addpost', { tags: data, currentDate: date });
