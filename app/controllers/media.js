@@ -47,7 +47,7 @@ module.exports.add = function(req, res, next) {
                             res.send({ error: err });
                         }
                         else {
-                            client.putFile(fi.path + '.inline', BUCKET_PATH + inline, this);
+                            client.putFile(fi.path + '.inline.jpg', BUCKET_PATH + inline, this);
                         }
                     }, function(err, s3res) {
                         if (err) {
