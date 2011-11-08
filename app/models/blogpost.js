@@ -7,7 +7,8 @@
  */
 
 const dateformat = require("dateformat")
-    , time = require('time');
+    , zoneinfo = require('zoneinfo')
+    , TZDate = zoneinfo.TZDate;
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -37,13 +38,13 @@ BlogPost.virtual('commentCount').get(function() {
 });
 
 BlogPost.virtual('displayDate').get(function() {
-    var ex = time.extend(this.publishDate);
+    var ex = new TZDate(this.publishDate);
     ex.setTimezone('America/Los_Angeles');
     return dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
 });
 
 BlogPost.virtual('localTime').get(function() {
-    var ex = time.extend(this.publishDate);
+    var ex = new TZDate(this.publishDate);
     ex.setTimezone('America/Los_Angeles');
     return dateformat(ex, 'mm-dd-yyyy hh:mm TT');
 });

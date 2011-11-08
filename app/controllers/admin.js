@@ -8,7 +8,8 @@
 
 const Flow = require('nestableflow')
     , dateformat = require("dateformat")
-    , time = require('time');
+    , zoneinfo = require('zoneinfo')
+    , TZDate = zoneinfo.TZDate;
 
 //Display a list of options
 module.exports.index = function(req, res, next) {
@@ -60,7 +61,7 @@ module.exports.getPost = function(req, res, next) {
 module.exports.newPost = function(req, res, next) {
     var Tag = req.app.set('db').tag;
 
-    var ex = time.extend(new Date());
+    var ex = new TZDate(this.publishDate);
     ex.setTimezone('America/Los_Angeles');
     var date = dateformat(ex, 'mm-dd-yyyy hh:MM TT Z');
 
