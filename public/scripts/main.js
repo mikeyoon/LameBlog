@@ -8,27 +8,6 @@
 
 var LB = {};
 
-LB.init = function(fbAppId, next) {
-    window.fbAsyncInit = function() {
-        FB.init({
-            appId:fbAppId,
-            cookie:true,
-            status:true,
-            xfbml:true
-        });
-
-        if (next)
-            next();
-    };
-
-    (function() {
-        var e = document.createElement('script');
-        e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-        e.async = true;
-        $('#fb-root').append(e);
-    })();
-};
-
 LB.setupCommenting = function(next) {
     FB.api('/me', function(user) {
         console.log(user);

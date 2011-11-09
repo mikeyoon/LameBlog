@@ -78,7 +78,8 @@ module.exports.search = function(req, res, next) {
 
 module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
-
+    var params = req.app.set('params');
+    
     var self = {};
     var root = Flow.serial(
         function(flow) {
@@ -110,7 +111,9 @@ module.exports.getPost = function(req, res, next) {
                     ogUrl: 'http://' + req.app.set('domain') + self.data.path,
                     ogSiteName: req.app.set('sitename'),
                     ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
-                    ogDescription: ''
+                    ogDescription: '',
+                    ogType: params.ogType,
+                    ogComment: params.ogComment
                 },
                 pageTitle: self.data.title
             });
