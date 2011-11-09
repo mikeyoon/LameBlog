@@ -20,7 +20,9 @@ module.exports = function(app) {
 
     app.get('/', function(req, res, next) { posts.index(req, res, next) });
 
-    app.get('/posts', function(req, res, next) { posts.index(req, res, next) });
+    app.get('/admin', requiresAdmin, function(req, res, next) { admin.index(req, res, next) });
+
+    app.get('/:id', function(req, res, next) { posts.getPost(req, res, next) });
 
     app.post('/comment/:postId', requiresAuthorization, function(req, res, next) { posts.addComment(req, res, next) });
 
@@ -33,8 +35,6 @@ module.exports = function(app) {
     app.post('/admin/login', function(req, res, next) { accounts.login(req, res, next) });
 
     app.post('/admin/setup', function(req, res, next) { accounts.setup(req, res, next) });
-
-    app.get('/admin', requiresAdmin, function(req, res, next) { admin.index(req, res, next) });
 
     app.all('/admin/*', requiresAdmin);
 

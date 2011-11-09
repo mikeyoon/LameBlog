@@ -8,13 +8,23 @@ html
         link(rel="stylesheet", href="/public/jquery-ui/css/ui-lightness/jquery-ui-1.8.16.custom.css", id="theme")
         link(rel="stylesheet", href="/public/jquery-fileupload/jquery.fileupload-ui.css")
         link(rel="shortcut icon", href="/public/images/favicon.ico")
-        //link(rel="stylesheet/less", href="/public/bootstrap/bootstrap.less")
-        //script(type="text/javascript", src="/public/scripts/less.js")
         script(type="text/javascript", src="/public/scripts/main.js")
 
         <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
+
+        if (ga_code)
+            script(type="text/javascript")
+                var _gaq = _gaq || [];
+                _gaq.push(['_setAccount', '#{ga_code}']);
+                _gaq.push(['_trackPageview']);
+
+                (function() {
+                    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+                })();
 
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         block scripts

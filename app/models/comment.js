@@ -6,7 +6,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-const dateformat = require("dateformat");
+const dateformat = require("dateformat")
+    , zoneinfo = require('zoneinfo')
+    , TZDate = zoneinfo.TZDate;
 
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
@@ -20,5 +22,6 @@ var Comment = module.exports = new Schema({
 });
 
 Comment.virtual('displayDate').get(function() {
-    return dateformat(this.createDate, 'mm-dd-yyyy hh:MM TT');
+    var ex = new TZDate(this.createDate.getTime(), 'America/Los_Angeles');
+    return ex.format('m-d-Y h:i A T');
 });

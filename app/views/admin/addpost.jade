@@ -23,7 +23,7 @@ block content
                 $.post($(this).attr('action'), data)
                     .success(function(data) {
                         if (data.success)
-                            window.location = '/posts' + data.path;
+                            window.location = data.path;
                         else
                         {
                             $('.err').html('<div class="alert-message error">' + data.message + '</div>')

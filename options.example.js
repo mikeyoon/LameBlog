@@ -9,6 +9,7 @@ module.exports = {
     site_url: 'blog.somewhere.com',
     site_title: 'Your Blog',
     site_tagline: 'Some cool, yet silly saying',
+    ga_code: '',
     facebookAppId: '',
     facebookSecret: '',
     ogType: 'lameblog:article', //If you use opengraph, this will be the og:type 

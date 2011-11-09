@@ -86,8 +86,8 @@ block sidebar
     div Recent Posts
         ul
           - each post in recent
-            li: a(href='/posts' + post.path)!=post.title
+            li: a(href=post.path)!=post.title
     div Related Posts
         ul
           - each post in related
-            li: a(href='/posts' + post.path)!=post.title
+            li: a(href=post.path)!=post.title

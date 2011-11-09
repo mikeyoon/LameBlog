@@ -57,7 +57,8 @@ module.exports = function(app) {
                 pageTitle: params.site_title, //Default to site name
                 siteName: params.site_title,
                 siteAuthor: params.author,
-                siteTagline: params.site_tagline
+                siteTagline: params.site_tagline,
+                ga_code: params.ga_code
             })
             .use('/public', express.static(__dirname + '/../public'));
     });

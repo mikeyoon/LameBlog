@@ -29,13 +29,13 @@ block content
         article
             header
                 h3
-                    a(href='/posts' + post.path)!=post.title
+                    a(href=post.path)!=post.title
                 em posted #{post.displayDate}
 
             p!=post.htmlbody
 
             p: span.fb-action
-                a.btn.small(href="/posts" + post.path) Comments (#{post.commentCount})
+                a.btn.small(href=post.path) Comments (#{post.commentCount})
 
         hr
             

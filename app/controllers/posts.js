@@ -107,7 +107,7 @@ module.exports.getPost = function(req, res, next) {
                 fbData: {
                     fbAppId: req.app.set('fbAppId'),
                     ogTitle: req.app.set('params').site_title + ' - ' + self.data.title,
-                    ogUrl: 'http://' + req.app.set('domain') + '/posts' + self.data.path,
+                    ogUrl: 'http://' + req.app.set('domain') + '/' + self.data.path,
                     ogSiteName: req.app.set('sitename'),
                     ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
                     ogDescription: ''

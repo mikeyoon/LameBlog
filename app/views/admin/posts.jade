@@ -34,7 +34,7 @@ block content
                 td!=post.commentCount
                 td: input(type="checkbox", disabled="true", checked=post.hidden)
                 td
-                    a.btn.small(href='/posts' + post.path) View
+                    a.btn.small(href=post.path) View
                     a.btn.small.leftspace(href='/admin/posts/' + post._id) Edit
                     a.btn.small.leftspace.danger.delete-post(href='javascript: //Delete', post-id=post._id) Delete
     a.btn.primary(href="/admin") Back
