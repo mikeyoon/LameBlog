@@ -113,7 +113,7 @@ block content
         if (post.tags.length > 0)
             p.topgap: small filed under:
                 - each tag in post.tags
-                    a(href="/?" + tag): span.label.leftspace!=tag
+                    a(href="/?tags=" + tag): span.label.leftspace!=tag
 
 
         footer#fb-footer
