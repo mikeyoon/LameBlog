@@ -595,10 +595,13 @@ address {
   margin-bottom: 18px;
 }
 
+code {
+  overflow: auto;
+}
+
 pre {
   margin: 0 0 12px;
   border: 1px solid #ccc;
-  overflow: auto;
 }
 
 /* Forms.less
