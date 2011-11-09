@@ -46,6 +46,8 @@ module.exports.index = function(req, res, next) {
                 };
             }).filter(function(p) {
                 return p.count;
+            }).sort(function(x, y) {
+                return y.count - x.count;
             });
 
             Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, flow.next);
