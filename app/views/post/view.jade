@@ -30,10 +30,66 @@ block content
     script(type="text/javascript")
         hljs.initHighlightingOnLoad();
 
+        var handleLogin = function(response)
+        {
+            console.log(response);
+            if (response.session)
+            {
+                var token = response.session.access_token;
+
+                $.ajax({
+                    url: document.location.protocol + "//graph.facebook.com/" + response.session.uid,
+                    cache: true,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(user) {
+                        $('#comment-user').html(user.name);
+                    }
+                });
+
+                $('.login').removeClass('hide').addClass('hide');
+                $('.add-comment').removeClass('hide');
+                $('#fb-logout').click(function() {
+                    FB.logout(function(logoutResponse) {
+                        $('.login').removeClass('hide');
+                        $('.add-comment').removeClass('hide').addClass('hide');
+                    });
+                });
+
+                $('#comment-link').click(function() {
+                    if ($('#comment-message').val() == '')
+                        return false;
+
+                    var message = $('#comment-message').val();
+
+                    $.post('/comment/' + $(this).attr('post-id'), {
+                        'comment[name]': user.name,
+                        'comment[message]': message
+                    }).success(function(commentResponse) {
+                        $.post('https://graph.facebook.com/me/#{fbData.ogComment}', {
+                            access_token: token,
+                            article: window.location.href,
+                            message: message.length > 50 ? message.substring(0, 50) + '...' : message
+                        });
+
+                        $('#commentTemplate').tmpl(response).appendTo('.comments');
+                        $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
+                    });
+                });
+            }
+            else
+            {
+                $('.login').removeClass('hide');
+                $('.add-comment').removeClass('hide').addClass('hide');
+            }
+        }
+
         $(document).ready(function() {
             $.ajax({
                 type: "GET",
                 url: 'http://connect.facebook.net/en_US/all.js',
+                dataType: "script",
+                cache: true,
                 success: function() {
                     FB.init({
                         appId: '#{fbData.fbAppId}',
@@ -42,56 +98,8 @@ block content
                         xfbml: true
                     });
 
-                    FB.getLoginStatus(function(response) {
-                        console.log(response);
-                        if (response.session)
-                        {
-                            var token = response.session.access_token;
-                            
-                            $.ajax({
-                                url: document.location.protocol + "//graph.facebook.com/" + response.session.uid,
-                                cache: true,
-                                type: "GET",
-                                dataType: "json",
-                                success: function(user) {
-                                    $('#comment-user').html(user.name);
-                                }
-                            });
-
-                            $('.login').removeClass('hide').addClass('hide');
-                            $('.add-comment').removeClass('hide');
-                            $('#fb-logout').click(function() {
-                                FB.logout(function(logoutResponse) {
-                                    $('.login').removeClass('hide');
-                                    $('.add-comment').removeClass('hide').addClass('hide');
-                                });
-                            });
-
-                            $('#comment-link').click(function() {
-                                if ($('#comment-message').val() == '')
-                                    return false;
-
-                                var message = $('#comment-message').val();
-
-                                $.post('/comment/' + $(this).attr('post-id'), {
-                                    'comment[name]': user.name,
-                                    'comment[message]': message
-                                }).success(function(commentResponse) {
-                                    $.post('https://graph.facebook.com/me/#{fbData.ogComment}', {
-                                        access_token: token,
-                                        article: window.location.href,
-                                        message: message.length > 50 ? message.substring(0, 50) + '...' : message
-                                    });
-                                    
-                                    $('#commentTemplate').tmpl(response).appendTo('.comments');
-                                    $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
-                                });
-                            });
-                        }
-                    });
-                },
-                dataType: "script",
-                cache: true
+                    FB.getLoginStatus(handleLogin);
+                }
             });
         });
 
@@ -108,7 +116,7 @@ block content
                     a(href="/?" + tag): span.label.leftspace!=tag
 
 
-        footer
+        footer#fb-footer
             div.fb-like(data-send="true", data-width="450", data-layout="button_count", data-href=fbData.ogUrl, data-show-faces="false")
     div.comments
         h4#comment-list Comments
@@ -123,7 +131,7 @@ block content
                 div.comment-body!=comment.message
     div.padded-bottom
         span(class="login hide")
-            div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="2", onlogin="LB.setupCommenting()") Login to comment
+            div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="2", onlogin="FB.getLoginStatus(handleLogin)") Login to comment
         span(class="add-comment hide")
             h5.small Leave a Comment
             p Logged in as
