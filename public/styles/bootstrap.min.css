@@ -598,6 +598,7 @@ address {
 pre {
   margin: 0 0 12px;
   border: 1px solid #ccc;
+  overflow: auto;
 }
 
 /* Forms.less
