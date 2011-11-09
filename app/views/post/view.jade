@@ -61,7 +61,7 @@ block content
                                     message: message.length > 50 ? message.substring(0, 50) + '...' : message
                                 });
 
-                                $('#commentTemplate').tmpl(response).appendTo('.comments');
+                                $('#commentTemplate').tmpl(commentResponse).appendTo('.comments');
                                 $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
                             });
                         });
