@@ -38,27 +38,28 @@ block content
                     FB.init({
                         appId: '#{fbData.fbAppId}',
                         cookie: true,
-                        status: true,
+                        status: false,
                         xfbml: true
-                    });
-
-                    FB.Event.subscribe('auth.login', function(response) {
-                        alert(response);
-                        console.log(response);
                     });
 
                     FB.getLoginStatus(function(response) {
                         console.log(response);
                         if (response.session)
                         {
-                            var token = response.session.access_token
+                            var token = response.session.access_token;
+                            
+                            $.ajax({
+                                url: document.location.protocol + "//graph.facebook.com/" + response.session.uid,
+                                cache: true,
+                                type: "GET",
+                                dataType: "json",
+                                success: function(user) {
+                                    $('#comment-user').html(user.name);
+                                }
+                            });
 
                             $('.login').removeClass('hide').addClass('hide');
                             $('.add-comment').removeClass('hide');
-                            FB.api('/me', function(user) {
-                                $('#comment-user').html(user.name);
-                            });
-
                             $('#fb-logout').click(function() {
                                 FB.logout(function(logoutResponse) {
                                     $('.login').removeClass('hide');
