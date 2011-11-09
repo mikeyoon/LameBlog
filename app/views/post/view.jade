@@ -44,6 +44,27 @@ block content
                     dataType: "json",
                     success: function(user) {
                         $('#comment-user').html(user.name);
+
+                        $('#comment-link').click(function() {
+                            if ($('#comment-message').val() == '')
+                                return false;
+
+                            var message = $('#comment-message').val();
+
+                            $.post('/comment/' + $(this).attr('post-id'), {
+                                'comment[name]': user.name,
+                                'comment[message]': message
+                            }).success(function(commentResponse) {
+                                $.post('https://graph.facebook.com/me/#{fbData.ogComment}', {
+                                    access_token: token,
+                                    article: window.location.href,
+                                    message: message.length > 50 ? message.substring(0, 50) + '...' : message
+                                });
+
+                                $('#commentTemplate').tmpl(response).appendTo('.comments');
+                                $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
+                            });
+                        });
                     }
                 });
 
@@ -53,27 +74,6 @@ block content
                     FB.logout(function(logoutResponse) {
                         $('.login').removeClass('hide');
                         $('.add-comment').removeClass('hide').addClass('hide');
-                    });
-                });
-
-                $('#comment-link').click(function() {
-                    if ($('#comment-message').val() == '')
-                        return false;
-
-                    var message = $('#comment-message').val();
-
-                    $.post('/comment/' + $(this).attr('post-id'), {
-                        'comment[name]': user.name,
-                        'comment[message]': message
-                    }).success(function(commentResponse) {
-                        $.post('https://graph.facebook.com/me/#{fbData.ogComment}', {
-                            access_token: token,
-                            article: window.location.href,
-                            message: message.length > 50 ? message.substring(0, 50) + '...' : message
-                        });
-
-                        $('#commentTemplate').tmpl(response).appendTo('.comments');
-                        $('.add-comment').html('<div class="alert-message success">Thanks for your comment!</div>');
                     });
                 });
             }
