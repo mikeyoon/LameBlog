@@ -60,7 +60,7 @@ module.exports = function(app) {
                 siteTagline: params.site_tagline,
                 ga_code: params.ga_code
             })
-            .use('/public', express.static(__dirname + '/../public'));
+            .use('/public', express.static(__dirname + '/../public', { maxAge: 7 * 60 * 60 * 24 * 1000 }));
     });
 
     //  Save reference to database connection
