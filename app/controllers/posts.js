@@ -89,7 +89,7 @@ module.exports.getPost = function(req, res, next) {
             if (data)
             {
                 self.data = data;
-                Post.find({ _id: { $ne: self.data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
+                Post.find({ _id: { $ne: self.data._id }, hidden: false }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
             }
             else {
                 res.redirect('/');
