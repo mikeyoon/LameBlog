@@ -25,7 +25,7 @@ block content
         article
             header
                 h3
-                    a(href=post.path)!=post.title
+                    a(href=post.path)=post.title
                 em posted #{post.displayDate}
 
             p!=post.htmlbody

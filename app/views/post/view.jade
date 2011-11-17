@@ -105,7 +105,7 @@ block content
 
     article
         header
-            h3!=post.title
+            h3=post.title
             em posted @ #{post.displayDate}
 
         p!=post.htmlbody
@@ -113,7 +113,7 @@ block content
         if (post.tags.length > 0)
             p.topgap: small filed under:
                 - each tag in post.tags
-                    a(href="/?tags=" + tag): span.label.leftspace!=tag
+                    a(href="/?tags=" + tag): span.label.leftspace=tag
 
 
         footer#fb-footer
@@ -124,11 +124,11 @@ block content
             div
                 div.comment-header
                     div.comment-header-content
-                        strong!=comment.name
+                        strong=comment.name
                         span.separator |
                         span Posted #{comment.displayDate}
 
-                div.comment-body!=comment.message
+                div.comment-body=comment.message
     div.padded-bottom
         span(class="login hide")
             div.fb-login-button(data-show-faces="false", data-width="200", data-max-rows="2", onlogin="FB.getLoginStatus(handleLogin)") Login to comment
@@ -146,8 +146,8 @@ block sidebar
     div Recent Posts
         ul
           - each post in recent
-            li: a(href=post.path)!=post.title
+            li: a(href=post.path)=post.title
     div Related Posts
         ul
           - each post in related
-            li: a(href=post.path)!=post.title
+            li: a(href=post.path)=post.title

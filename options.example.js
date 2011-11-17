@@ -20,10 +20,3 @@ module.exports = {
     author: 'Your Name',
     sessionSecret: 'My key'
 }
-
-    <extensions>
-        <behaviorExtensions>
-            <add name="silverlightFaults"
-                type="Sample..., Sample..., Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
-        </behaviorExtensions>
-    </extensions>
