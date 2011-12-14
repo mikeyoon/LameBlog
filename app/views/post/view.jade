@@ -33,12 +33,12 @@ block content
         var handleLogin = function(response)
         {
             console.log(response);
-            if (response.session)
+            if (response.authResponse)
             {
-                var token = response.session.access_token;
+                var token = response.authResponse.access_token;
 
                 $.ajax({
-                    url: document.location.protocol + "//graph.facebook.com/" + response.session.uid,
+                    url: document.location.protocol + "//graph.facebook.com/" + response.authResponse.userID,
                     cache: true,
                     type: "GET",
                     dataType: "json",
