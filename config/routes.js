@@ -65,7 +65,9 @@ module.exports = function(app) {
 
 function requiresAuthorization(req, res, next) {
     var fb = req.app.set('fbClient');
-    fb.getSessionByRequestHeaders(req.headers)(function(fb_session) {
+    console.log(req.query);
+    fb.getSessionByAccessToken(req.query.token)(function(fb_session) {
+
         if (fb_session)
         {
             fb_session.isValid()(function(is_valid) {

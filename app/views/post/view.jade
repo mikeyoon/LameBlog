@@ -35,7 +35,7 @@ block content
             console.log(response);
             if (response.authResponse)
             {
-                var token = response.authResponse.access_token;
+                var token = response.authResponse.accessToken;
 
                 $.ajax({
                     url: document.location.protocol + "//graph.facebook.com/" + response.authResponse.userID,
@@ -51,7 +51,7 @@ block content
 
                             var message = $('#comment-message').val();
 
-                            $.post('/comment/' + $(this).attr('post-id'), {
+                            $.post('/comment/' + $(this).attr('post-id') + '?token=' + token, {
                                 'comment[name]': user.name,
                                 'comment[message]': message
                             }).success(function(commentResponse) {
