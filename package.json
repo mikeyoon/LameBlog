@@ -30,6 +30,7 @@
         "facebook-client" : "latest",
         "nestableflow" : "latest",
         "connect-redis" : "latest",
+        "redis" : "latest",
         "zoneinfo": "latest",
         "optimist": "latest"
     }
