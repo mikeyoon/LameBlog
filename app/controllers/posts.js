@@ -137,7 +137,7 @@ module.exports.getPost = function(req, res, next) {
 
     var root = Flow.serial(
         function(flow) {
-            redis.get(req.params.id, flow.next);
+            redis.get('/' + req.params.id, flow.next);
         },
         function(flow, reply) {
             if (reply) {
@@ -151,7 +151,7 @@ module.exports.getPost = function(req, res, next) {
             if (data)
             {
                 if (cache) {
-                    redis.set(req.params.id, JSON.stringify(data), r.print);
+                    redis.set(data.path, JSON.stringify(data), r.print);
                     cache = false;
                 }
 
