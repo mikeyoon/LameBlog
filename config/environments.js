@@ -16,22 +16,26 @@ module.exports = function(app){
   var params = app.set('params');
 
   app.configure('local', function (){
+    var store = new RedisStore();
     this
       .set('version','1.0.0')
       .set('host', 'localhost')
       .set('domain', params.site_url + (port != 80 ? ':' + port : ''))
       .set('port', port)
       .set('env','local')
-      .use(express.session({ secret: 'secret key'}));
+      .set('redis', store.client)
+      .use(express.session({ store: store, secret: params.sessionSecret}));
   });
 
   app.configure('production', function (){
+    var store = new RedisStore();
     this
       .set('version','1.0.0')
       .set('host', params.site_url)
       .set('domain', params.site_url)
       .set('port', port)
       .set('env','production')
-      .use(express.session({ store: new RedisStore, secret: params.sessionSecret}));
+      .set('redis', store.client)
+      .use(express.session({ store: store, secret: params.sessionSecret}));
   });
 }

@@ -8,6 +8,7 @@
 
 const dateformat = require("dateformat")
     , zoneinfo = require('zoneinfo')
+    , client = require('redis').createClient()
     , TZDate = zoneinfo.TZDate;
 
 var mongoose = require('mongoose'),
@@ -47,6 +48,21 @@ BlogPost.virtual('localTime').get(function() {
     return ex.format('m-d-Y h:i A');
 });
 
+BlogPost.post('save', function(next) {
+    client.del(this.path);
+    client.hdel('queries');
+    client.del('tags');
+    next();
+});
+
+BlogPost.post('remove', function(next) {
+    client.del(this.path);
+    client.hdel('queries');
+    client.del('tags');
+    next();
+});
+
 BlogPost.statics.findByPath = function(path, callback) {
     this.findOne({ path: '/' + path }, callback);
 };
+

@@ -7,6 +7,7 @@
  */
 
 const md = require('node-markdown').Markdown
+    , r = require('redis')
     , Flow = require('nestableflow');
 
 const PAGE_SIZE = 5;
@@ -14,6 +15,7 @@ const PAGE_SIZE = 5;
 module.exports.index = function(req, res, next) {
     var Post = req.app.set('db').posts;
     var Tag = req.app.set('db').tag;
+    var redis = req.app.set('redis');
     
     var skip = req.query.page ? (req.query.page - 1) * PAGE_SIZE : 0;
     var limit = PAGE_SIZE;
@@ -27,18 +29,49 @@ module.exports.index = function(req, res, next) {
 
     var allTags;
     var pages = [];
+    var cache = false;
+
+    var queryOption = { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip, populate: {} };
 
     var root = Flow.serial(
         function(flow) {
-            Post.count(where, flow.next);
+            redis.hget('queries', 'postcount' + JSON.stringify(where), flow.next);
+        },
+        function(flow, reply) {
+            if (reply) {
+                cache = false;
+                flow.next(reply);
+            } else {
+                cache = true;
+                Post.count(where, flow.next);
+            }
         },
         function(flow, count) {
+            if (cache) {
+                redis.hset('queries', 'postcount' + JSON.stringify(where), count, r.print);
+                cache = false;
+            }
+
+            redis.get('tags', flow.next);
+
             for (var ii = 0;ii < Math.ceil(count / PAGE_SIZE);ii++)
                 pages.push(ii + 1);
-
-            Tag.find({  }, flow.next);
+        },
+        function(flow, reply) {
+            if (reply) {
+                flow.next(JSON.parse(reply));
+            } else {
+                cache = true;
+                Tag.find({  }, flow.next);
+            }
         },
         function(flow, data) {
+            if (cache)
+            {
+                redis.set('tags', JSON.stringify(data), r.print);
+                cache = false;
+            }
+
             allTags = data.map(function(p) {
                 return {
                     name: p.name,
@@ -50,9 +83,22 @@ module.exports.index = function(req, res, next) {
                 return y.count - x.count;
             });
 
-            Post.find(where, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: PAGE_SIZE, skip: skip }, flow.next);
+            redis.hget('queries', 'search' + JSON.stringify(where) + JSON.stringify(queryOption), flow.next);
+        },
+        function(flow, reply) {
+            if (reply) {
+                flow.next(JSON.parse(reply).map(function(p) {
+                    return new Post(p);
+                }));
+            } else {
+                cache = true;
+                Post.find(where, [], queryOption, flow.next);
+            }
         },
         function(flow, data) {
+            if (cache)
+                redis.hset('queries', 'search' + JSON.stringify(where) + JSON.stringify(queryOption), JSON.stringify(data), r.print);
+
             res.render('post/index', {
                 layout: false,
                 posts: data,
@@ -79,27 +125,82 @@ module.exports.search = function(req, res, next) {
 module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
     var params = req.app.set('params');
-    
+    var redis = req.app.set('redis');
+
     var self = {};
+    var cache = false;
+
+    var recentQuery = {
+        //where: { _id: { $ne: self.data._id }, hidden: false },
+        options: { sort: [ [ 'publishDate', 'descending' ] ], limit: 3, populate: {}}
+    };
+
     var root = Flow.serial(
         function(flow) {
-            Post.findByPath(req.params.id, flow.next);
+            redis.get(req.params.id, flow.next);
+        },
+        function(flow, reply) {
+            if (reply) {
+                flow.next(new Post(JSON.parse(reply)));
+            } else {
+                cache = true;
+                Post.findByPath(req.params.id, flow.next);
+            }
         },
         function(flow, data) {
             if (data)
             {
+                if (cache) {
+                    redis.set(req.params.id, JSON.stringify(data), r.print);
+                    cache = false;
+                }
+
                 self.data = data;
-                Post.find({ _id: { $ne: self.data._id }, hidden: false }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
+
+                redis.hget('queries', 'recent' + req.params.id, flow.next);
             }
             else {
                 res.redirect('/');
             }
         },
+        function(flow, reply) {
+            if (reply) {
+                flow.next(JSON.parse(reply).map(function(p) {
+                    return new Post(p);
+                }));
+            } else {
+                cache = true;
+                recentQuery.where = { _id: { $ne: self.data._id }, hidden: false };
+                Post.find(recentQuery.where, [], recentQuery.options, flow.next);
+            }
+        },
         function(flow, recent) {
+            if (cache) {
+                cache = false;
+                redis.hset('queries', 'recent' + req.params.id, JSON.stringify(recent), r.print);
+            }
+
             self.recent = recent;
-            Post.find({ hidden: false, tags: { $in : self.data.tags }, _id: { $ne : self.data._id } }, [], { sort: [ [ 'publishDate', 'descending' ] ], limit: 3 }, flow.next);
+
+            recentQuery.where = { hidden: false, tags: { $in : self.data.tags }, _id: { $ne : self.data._id } };
+            recentQuery.options = { sort: [ [ 'publishDate', 'descending' ] ], limit: 3, populate: {} };
+            redis.hget('queries', 'related' + JSON.stringify(recentQuery.where) + JSON.stringify(recentQuery.options), flow.next);
+        },
+        function(flow, reply) {
+            if (reply) {
+                flow.next(JSON.parse(reply).map(function(p) {
+                    return new Post(p);
+                }));
+            } else {
+                cache = true;
+                Post.find(recentQuery.where, [], recentQuery.options, flow.next);
+            }
         },
         function(flow, tagged) {
+            if (cache) {
+                redis.hset('queries', 'related' + JSON.stringify(recentQuery.where) + JSON.stringify(recentQuery.options), JSON.stringify(tagged), r.print);
+            }
+
             res.render('post/view', {
                 layout: false,
                 post: self.data,
