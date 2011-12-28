@@ -213,7 +213,7 @@ module.exports.getPost = function(req, res, next) {
                     ogUrl: 'http://' + req.app.set('domain') + self.data.path,
                     ogSiteName: req.app.set('sitename'),
                     ogImageUrl: 'http://' + req.app.set('domain') + '/public/images/logo.png',
-                    ogDescription: '',
+                    ogDescription: self.data.description,
                     ogType: params.ogType,
                     ogComment: params.ogComment
                 },

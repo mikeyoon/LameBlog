@@ -34,6 +34,13 @@ BlogPost.virtual('htmlbody').get(function() {
     return md(this.body);
 });
 
+BlogPost.virtual('description').get(function() {
+    if (this.body.length < 150)
+        return this.body;
+    else
+        return this.body.substring(0, 150) + '...';
+});
+
 BlogPost.virtual('commentCount').get(function() {
     return this.comments.length;
 });
