@@ -17,7 +17,7 @@ module.exports = function(app) {
     //  Load Blog Post model
     var BlogPost = require('../app/models/blogpost');
     var caching = app.set('caching');
-
+    var client = app.set('redis');
 
 
     mongoose.model('BlogPost', BlogPost);

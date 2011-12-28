@@ -31,13 +31,13 @@ module.exports = function () {
 
     config(app);
 
-    //  Load Mongoose Models
-
-    models(app)
-
     //  Load Environmental Settings
 
     environments(app);
+
+    //  Load Mongoose Models
+
+    models(app)
 
     //  Load routes config
 
