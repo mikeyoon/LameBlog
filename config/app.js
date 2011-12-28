@@ -27,13 +27,13 @@ module.exports = function () {
 
     const app = express.createServer()
 
-    //  Load Mongoose Models
-
-    models(app)
-
     //  Load Expressjs config
 
     config(app);
+
+    //  Load Mongoose Models
+
+    models(app)
 
     //  Load Environmental Settings
 

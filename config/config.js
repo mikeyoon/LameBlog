@@ -28,10 +28,11 @@ module.exports = function(app) {
     });
 
     //  Setup DB Connection
-
     var dblink = process.env.MONGOLAB_URI || 'mongodb://localhost/lameblog';
 
     const db = mongoose.createConnection(dblink);
+
+    app.set('dbConnection', db);
 
     //  Configure expressjs
     app.configure(function() {
@@ -63,24 +64,6 @@ module.exports = function(app) {
             .use('/public', express.static(__dirname + '/../public', { maxAge: 7 * 60 * 60 * 24 * 1000 }));
     });
 
-    //  Save reference to database connection
-
-    app.configure(function () {
-        app.set('db', {
-            'main': db
-            , 'users': db.model('User')
-            , 'posts': db.model('BlogPost')
-            , 'media': db.model('MediaItem')
-            , 'tag': db.model('Tag')
-            , 'comments': db.model('Comment')
-        });
-
-        app.set('fbAppId', params.facebookAppId);
-        app.set('sitename', params.site_title);
-
-        app.set('version', '1.0.0');
-    });
-
     app.configure(function() {
         var fbClient = new FacebookClient(
             params.facebookAppId,
@@ -92,11 +75,24 @@ module.exports = function(app) {
         app.set('s3', client);
     });
 
-    //  Configure File Storage
+
 
     app.configure(function() {
+        //  Configure File Storage
         app.set('media', storage);
+
+        app.set('fbAppId', params.facebookAppId);
+        app.set('sitename', params.site_title);
+
+        app.set('version', '1.0.0');
+
+        //Setup utility functions
+        app.set('caching', {
+            queryKey: params.sessionSecret + '-queries'
+        });
     });
+
+
 
     return app;
 }

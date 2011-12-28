@@ -16,7 +16,8 @@ module.exports.index = function(req, res, next) {
     var Post = req.app.set('db').posts;
     var Tag = req.app.set('db').tag;
     var redis = req.app.set('redis');
-    
+    var caching = req.app.set('caching');
+
     var skip = req.query.page ? (req.query.page - 1) * PAGE_SIZE : 0;
     var limit = PAGE_SIZE;
 
@@ -35,7 +36,7 @@ module.exports.index = function(req, res, next) {
 
     var root = Flow.serial(
         function(flow) {
-            redis.hget('queries', 'postcount' + JSON.stringify(where), flow.next);
+            redis.hget(caching.queryKey, 'postcount' + JSON.stringify(where), flow.next);
         },
         function(flow, reply) {
             if (reply) {
@@ -48,11 +49,11 @@ module.exports.index = function(req, res, next) {
         },
         function(flow, count) {
             if (cache) {
-                redis.hset('queries', 'postcount' + JSON.stringify(where), count, r.print);
+                redis.hset(caching.queryKey, 'postcount' + JSON.stringify(where), count, r.print);
                 cache = false;
             }
 
-            redis.get('tags', flow.next);
+            redis.hget(caching.queryKey, 'tags', flow.next);
 
             for (var ii = 0;ii < Math.ceil(count / PAGE_SIZE);ii++)
                 pages.push(ii + 1);
@@ -68,7 +69,7 @@ module.exports.index = function(req, res, next) {
         function(flow, data) {
             if (cache)
             {
-                redis.set('tags', JSON.stringify(data), r.print);
+                redis.hset(caching.queryKey, 'tags', JSON.stringify(data), r.print);
                 cache = false;
             }
 
@@ -83,7 +84,7 @@ module.exports.index = function(req, res, next) {
                 return y.count - x.count;
             });
 
-            redis.hget('queries', 'search' + JSON.stringify(where) + JSON.stringify(queryOption), flow.next);
+            redis.hget(caching.queryKey, 'search' + JSON.stringify(where) + JSON.stringify(queryOption), flow.next);
         },
         function(flow, reply) {
             if (reply) {
@@ -97,7 +98,7 @@ module.exports.index = function(req, res, next) {
         },
         function(flow, data) {
             if (cache)
-                redis.hset('queries', 'search' + JSON.stringify(where) + JSON.stringify(queryOption), JSON.stringify(data), r.print);
+                redis.hset(caching.queryKey, 'search' + JSON.stringify(where) + JSON.stringify(queryOption), JSON.stringify(data), r.print);
 
             res.render('post/index', {
                 layout: false,
@@ -126,7 +127,7 @@ module.exports.getPost = function(req, res, next) {
     var Post = req.app.set('db').posts;
     var params = req.app.set('params');
     var redis = req.app.set('redis');
-
+    var caching = req.app.set('caching');
     var self = {};
     var cache = false;
 
@@ -157,7 +158,7 @@ module.exports.getPost = function(req, res, next) {
 
                 self.data = data;
 
-                redis.hget('queries', 'recent' + req.params.id, flow.next);
+                redis.hget(caching.queryKey, 'recent' + req.params.id, flow.next);
             }
             else {
                 res.redirect('/');
@@ -177,14 +178,14 @@ module.exports.getPost = function(req, res, next) {
         function(flow, recent) {
             if (cache) {
                 cache = false;
-                redis.hset('queries', 'recent' + req.params.id, JSON.stringify(recent), r.print);
+                redis.hset(caching.queryKey, 'recent' + req.params.id, JSON.stringify(recent), r.print);
             }
 
             self.recent = recent;
 
             recentQuery.where = { hidden: false, tags: { $in : self.data.tags }, _id: { $ne : self.data._id } };
             recentQuery.options = { sort: [ [ 'publishDate', 'descending' ] ], limit: 3, populate: {} };
-            redis.hget('queries', 'related' + JSON.stringify(recentQuery.where) + JSON.stringify(recentQuery.options), flow.next);
+            redis.hget(caching.queryKey, 'related' + JSON.stringify(recentQuery.where) + JSON.stringify(recentQuery.options), flow.next);
         },
         function(flow, reply) {
             if (reply) {
@@ -198,7 +199,7 @@ module.exports.getPost = function(req, res, next) {
         },
         function(flow, tagged) {
             if (cache) {
-                redis.hset('queries', 'related' + JSON.stringify(recentQuery.where) + JSON.stringify(recentQuery.options), JSON.stringify(tagged), r.print);
+                redis.hset(caching.queryKey, 'related' + JSON.stringify(recentQuery.where) + JSON.stringify(recentQuery.options), JSON.stringify(tagged), r.print);
             }
 
             res.render('post/view', {

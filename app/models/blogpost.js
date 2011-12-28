@@ -48,31 +48,6 @@ BlogPost.virtual('localTime').get(function() {
     return ex.format('m-d-Y h:i A');
 });
 
-BlogPost.post('save', function(data) {
-    client.del(data.path);
-    client.hkeys('queries', function(err, reply) {
-        if (reply) {
-            reply.forEach(function(p) {
-                client.hdel('queries', p);
-            });
-        }
-    });
-
-    client.del('tags');
-});
-
-BlogPost.post('remove', function() {
-    client.del(this.path);
-    client.hkeys('queries', function(err, reply) {
-        if (reply) {
-            reply.forEach(function(p) {
-                client.hdel('queries', p);
-            });
-        }
-    });
-    client.del('tags');
-});
-
 BlogPost.statics.findByPath = function(path, callback) {
     this.findOne({ path: '/' + path }, callback);
 };
